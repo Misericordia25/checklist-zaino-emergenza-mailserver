@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>Checklist Zaino d’Emergenza - Misericordia</title>
+ 
+<!-- librerie -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+ 
+<style>
+/* --- STILI ORIGINALI (invariati salvo fix per layout verticale) --- */
+body{
+ font-family: Arial, sans-serif;
+ background:#f4faff;
+ padding:20px;
+ font-size:18px;
+ color:#222;
+ max-width:100%;
+ box-sizing:border-box;
+}
+h1,h2,h3{word-break:break-word;}
+h2{
+ background:#007BFF;
+ color:#fff;
+ padding:10px;
+ border-radius:6px;
+ font-size:22px;
+}
+h3{
+ margin-top:30px;
+ color:#007BFF;
+ font-size:20px;
+}
+label,select,input,textarea{font-size:18px;}
+.copertina{
+ text-align:left;
+ margin-top:100px;
+ page-break-after:always;
+}
+ 
+/* --- CHECKLIST ITEMS --- */
+.checklist-item{
+ border:3px solid #ccc;
+ padding:10px 12px;
+ margin-bottom:10px;
+ border-radius:10px;
+ background:#fff;
+ display:block;
+}
+.checklist-item.ok{border-left:12px solid green;background:#e9f9e9;}
+.checklist-item.ko{border-left:16px solid red;background:#ffecec;}
+.checklist-item.scaduto{border-left:16px solid orange;background:#fff4e5;}
+ 
+.etichetta{font-weight:bold;margin-bottom:8px;display:block;}
+.data-box{margin-bottom:8px;}
+.risposta-box{margin-top:6px;}
+ 
+.risposta-box select,
+.data-box input{
+ font-size:18px;
+ width:100%;
+ padding:8px;
+ box-sizing:border-box;
+ margin-top:5px;
+}
+textarea{
+ width:100%;
+ padding:10px;
+ font-size:18px;
+ resize:vertical;
+ box-sizing:border-box;
+}
+ 
+/* --- FIRME --- */
+.firma-canvas{
+ border:1px dashed #666;
+ margin-top:6px;
+ width:100%;
+ height:180px;
+ background:#fff;
+ touch-action:none;
+ display:block;
+}
+ 
+/* --- BOTTONI --- */
+input[type="text"]{
+ font-size:18px;
+ width:100%;
+ padding:8px;
+ margin-bottom:10px;
+ box-sizing:border-box;
+}
+.btn{
+ padding:16px 28px;
+ margin:8px 4px 8px 0;
+ background:#007BFF;
+ color:#fff;
+ border:none;
+ cursor:pointer;
+ border-radius:6px;
+ font-size:18px;
+ width:100%;
+ max-width:400px;
+}
+.btn.green{background:#28a745!important;}
+.btn.disabled{opacity:.6;pointer-events:auto;}
+ 
+@media(min-width:768px){
+ .btn{width:auto;}
+}
+ 
+/* Riepilogo */
+#riepilogoNegativita{
+ margin-top:20px;
+ padding:14px;
+ border:2px dashed red;
+ background:#fff5f5;
+ display:none;
+}
+#progressoChecklist{
+ margin-top:8px;
+ font-weight:600;
+}
+ 
+/* Reset notice */
+#resetNotice{
+ display:none;
+ position:fixed;
+ top:12px;
+ left:50%;
+ transform:translateX(-50%);
+ background:#d4edda;
+ color:#155724;
+ border:1px solid #c3e6cb;
+ padding:10px 16px;
+ border-radius:8px;
+ z-index:9999;
+ box-shadow:0 4px 14px rgba(0,0,0,.06);
+ font-weight:700;
+}
+ 
+/* Banner scaduti */
+#scadutiBanner{
+ display:none;
+ position:fixed;
+ top:12px;
+ left:50%;
+ transform:translateX(-50%);
+ background:linear-gradient(90deg,#ffb84d,#ff704d);
+ color:#3a1a00;
+ border:1px solid #dd6b2f;
+ padding:10px 18px;
+ border-radius:8px;
+ z-index:10000;
+ font-weight:800;
+ box-shadow:0 6px 18px rgba(0,0,0,.12);
+ text-align:center;
+}
+.scaduti-blink{animation:scadutiBlink .5s linear infinite;}
+@keyframes scadutiBlink{
+ 0%{opacity:1;transform:translateX(-50%) scale(1);}
+ 25%{opacity:.15;transform:translateX(-50%) scale(1.02);}
+ 50%{opacity:1;transform:translateX(-50%) scale(1);}
+ 75%{opacity:.15;transform:translateX(-50%) scale(1.02);}
+ 100%{opacity:1;transform:translateX(-50%) scale(1);}
+}
+ 
+/* stampa */
+.no-print{display:inline-block;}
+@media print{.no-print{display:none!important;}}
+ 
+.page-break{page-break-after:always;}
+ 
+/* header */
+header{
+ display:flex;
+ gap:12px;
+ align-items:center;
+ margin-bottom:12px;
+}
+.header-title{
+ font-size:18px;
+ font-weight:700;
+}
+</style>
+</head>
+<body>
+ 
+<!-- Reset notification -->
+<div id="resetNotice">✅ CHECKLIST AZZERATA CON SUCCESSO!!!</div>
+ 
+<!-- Banner scaduti -->
+<div id="scadutiBanner">
+ ⚠️ Attenzione: SONO PRESENTI MATERIALI SANITARI SCADUTI DA SOSTITUIRE!!
+</div>
+ 
+<!-- Copertina -->
+<div class="copertina">
+ <h1>CHECKLIST MATERIALE ZAINO DI EMERGENZA</h1>
+ <p><strong>Data/Ora apertura documento:</strong>
+   <span id="dataOraCorrente"></span></p>
+</div>
+ 
+<!-- Header / titolo -->
+<header>
+ <img src="" alt="Logo" style="width:70px;display:none;" onerror="this.style.display='none'">
+ <div>
+   <div class="header-title">CHECKLIST - MISERICORDIA</div>
+   <div style="font-size:12px;color:#555;">Modulo controlli pre-partenza</div>
+ </div>
+</header>
+ 
+<!-- SELEZIONE VEICOLO (targa da pagina ponte/QR) -->
+<h2>🚐 VEICOLO RILEVATO / ASSEGNATO</h2>
+<p><strong>📅 Data/Ora apertura:</strong>
+ <span id="dataOraCorrente2"></span></p>
+ 
+<label for="targa">🚐 Veicolo (targa):</label>
+<input
+ type="text"
+ id="targa"
+ style="text-transform:uppercase;"
+ readonly
+>
+ 
+<!-- Checklist: dotazioni -->
+ 
+</div>
+ 
+<!-- Checklist: Materiale zaino di emergenza -->
+<h2>  MATERIALE ZAINO DI EMERGENZA</h2>
+<div class="checklist-item">
+<div class="etichetta"> N°3 CONFEZIONI DI GARZE STERILI </div>
+<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N°2 TELINI STERILI</div>
+ 
+<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="data-box"></div>
+<div class="etichetta"> - GARZE NON STERILI VARIE</div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N°2 FLACONI DI ACQUA OSSIGENATA</div>
+<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N°1 FLACONE DI DISINFETTANTE IODATO </div>
+<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
+ 
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="etichetta">  N°2 CEROTTI 5x7 + N°1 CEROTTI 10x8 + N°1 CEROTTI 15x10</div>
+<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div><div
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N°2 ROTOLI DI BENDE PER FASCIATURA</div>
+ 
+<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="data-box"></div>
+<div class="etichetta"> N°1 FORBICI ROBIN O SIMILARE</div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="data-box"></div>
+<div class="etichetta"> N°1 AGO BOX/OGGETTI TAGLIENTI UTILIZZATI</div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="data-box"></div>
+<div class="etichetta"> - PALLONE AMBU ADULTI + PEDIATRICO CON RESERVOIR N.1 + 1 PER MISURA + N°2 FILTRI ANTIBATTERICI</div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="etichetta"> - MASCHERE PER PALLONE AMBU MISURE DA 0 A 5  N°1 PER MISURA</div>
+<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="etichetta"> - CANNULE OROFARINGEE MISURE DA 000 A 5 N°1 PER MISURA </div>
+ 
+<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N°2 CANNULE NASOFARINGEE DI MISURE DIVERSE</div>
+<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N°1 OCCHIALINI PER OSSIGENO</div>
+<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N°1 PROLUNGA PER OSSIGENO</div>
+<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N°1 MASCHERA OSSIGENO ADULTI CON RESERVOIR</div>
+<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N°1 MASCHERA OSSIGENO PEDIATRICA CON RESERVOIR</div>
+<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="data-box"></div>
+<div class="etichetta"> N°1 TOURNIQUET PER EMOSTASI</div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N°4 CONFEZIONI DI GHIACCIO ISTANTANEO</div>
+<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N°2 CONFEZIONI DI CALDO ISTANTANEO </div>
+<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="data-box"></div>
+<div class="etichetta"> N°2 SACCHETTI PER RIFIUTI</div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="data-box"></div>
+<div class="etichetta"> N°2 TELI TERMICI</div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+</div>
+<div class="checklist-item">
+<div class="data-box"></div>
+<div class="etichetta"> N°1  CANNULA YANKAUER </div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+ 
+</div>
+ 
+<h3 id="progressoChecklist">Completamento: 0%</h3>
+ 
+<div id="riepilogoNegativita"></div>
+ 
+<!-- COMPILATORI E FIRME -->
+<h2>🧍‍♂️ COMPILATORI e FIRME</h2>
+<label for="numeroCompilatori">Numero di compilatori:</label>
+<select id="numeroCompilatori" onchange="mostraCompilatori()">
+ <option value="1">1</option>
+ <option value="2">2</option>
+ <option value="3">3</option>
+ <option value="4">4</option>
+</select>
+ 
+<div id="compilatoriBox"></div>
+ 
+<!-- NOTE -->
+<h2>📝 TURNO:</h2>
+<textarea id="noteArea" rows="6" placeholder="Eventuali osservazioni..."></textarea>
+ 
+<h2>📝 VARIE EQUIPAGGIO & NOTE:</h2>
+<textarea id="noteVarie" rows="6" placeholder="Eventuali osservazioni..."></textarea>
+ 
+<!-- PULSANTI -->
+<div style="margin-top:30px;">
+ <button id="btnRiepilogo" class="btn no-print"
+   style="background:#ff4444;" onclick="mostraNegativi()">
+   🔴 PREMI QUI QUANDO IL PUSANTE_CREA PDF PER ANALISI NON E’ VERDE
+ </button>
+ <!-- GIALLO: solo crea/scarica PDF sul dispositivo --> 
+ <button id="btnAnteprima" class="btn no-print"
+   style="background:#ffc107;" onclick="anteprimaCondivisionePDF()">
+   📤 Crea PDF per ANALISI
+ </button>
+ 
+ <!-- VERDE: genera PDF + invia via mail usando impostazioni -->
+ <button id="btnInviaMail" class="btn no-print"
+   style="background:#28a745;" onclick="inviaChecklistViaMail()">
+   ✉️ Invia alla mail configurata
+ </button>
+ 
+ <button class="btn no-print"
+   style="background:#007BFF;" onclick="resetChecklist()">
+   🔄 RESET
+ </button>
+</div>
+ 
+by Marco P. (MSA) volontario Misericordia             (vers0.1)2_2026
+ 
+<script>
+/* ============================
+  FUNZIONI DI SUPPORTO DATE
+============================ */
+function labelKeyForDate(input){
+ const item = input.closest('.checklist-item');
+ if(!item) return null;
+ const et = item.querySelector('.etichetta');
+ return et ? et.textContent.trim() : null;
+}
+ 
+function saveDateForInput(input){
+ const key = labelKeyForDate(input);
+ if(!key) return;
+ try{
+   localStorage.setItem('scadenza_'+key, input.value || '');
+ }catch(e){}
+}
+ 
+function loadSavedDatesAndApply(){
+ const oggi = new Date(); oggi.setHours(0,0,0,0);
+ let anyScaduto = false;
+ document.querySelectorAll('input.scad-date').forEach(input=>{
+   const key = labelKeyForDate(input);
+   if(!key) return;
+   const saved = localStorage.getItem('scadenza_'+key);
+   const item = input.closest('.checklist-item');
+   if(saved){
+     input.value = saved;
+     const d = new Date(saved);
+     if(d < oggi){
+       item && item.classList.add('scaduto');
+       anyScaduto = true;
+     }else{
+       item && item.classList.remove('scaduto');
+     }
+   }else{
+     item && item.classList.remove('scaduto');
+   }
+ });
+ if(anyScaduto) triggerBannerScaduti();
+}
+ 
+function verifica(input){
+ const oggi = new Date(); oggi.setHours(0,0,0,0);
+ const item = input.closest('.checklist-item');
+ if(!input.value){
+   item && item.classList.remove('scaduto');
+ }else{
+   const d = new Date(input.value);
+   if(d < oggi){
+     item && item.classList.add('scaduto');
+   }else{
+     item && item.classList.remove('scaduto');
+   }
+ }
+ saveDateForInput(input);
+ aggiornaProgressivo();
+ aggiornaBannerScaduti();
+ updateAnteprimaButtonState();
+}
+ 
+/* ============================
+  VALUTAZIONE SI/NO
+============================ */
+function valuta(sel){
+ const item = sel.closest('.checklist-item');
+ if(!item) return;
+ item.classList.remove('ok','ko');
+ if(sel.value === 'SI' || sel.value === 'OK') item.classList.add('ok');
+ else if(sel.value === 'NO' || sel.value === 'KO') item.classList.add('ko');
+ aggiornaProgressivo();
+ updateAnteprimaButtonState();
+}
+ 
+function aggiornaProgressivo(){
+ const items = document.querySelectorAll('.checklist-item');
+ let compilati = 0, tot = 0;
+ items.forEach(item=>{
+   const sel = item.querySelector('select');
+   if(sel){
+     tot++;
+     if(sel.value) compilati++;
+   }
+ });
+ const perc = tot ? Math.round(compilati/tot*100) : 0;
+ const el = document.getElementById('progressoChecklist');
+ if(el) el.textContent = 'Completamento: '+perc+'%';
+}
+ 
+/* ============================
+  NEGATIVI
+============================ */
+function mostraNegativi(){
+ const negativi = [...document.querySelectorAll('.checklist-item')]
+   .filter(i => i.classList.contains('ko') || i.classList.contains('scaduto'))
+   .map(i => i.querySelector('.etichetta').textContent.trim());
+ const box = document.getElementById('riepilogoNegativita');
+ box.style.display = 'block';
+ box.innerHTML = negativi.length
+   ? "<strong>❌ SONO PRESENTI ELEMENTI NEGATIVI O SCADUTI. È OBBLIGATORIO SOSTITUIRLI PRIMA DI PARTIRE CON IL VEICOLO SANITARIO E RENDERE POSITIVA LA CHECKLIST PRIMA DELLA CONDIVISIONE VIA E-MAIL:</strong><br>"+negativi.join('<br>')
+   : "✅ BEN FATTO!! NESSUN ELEMENTO NEGATIVO O SCADUTO RILEVATO, PUOI PREMERE IL PULSANTE diventato VERDE Crea PDF per ANALISI ANTEPRIMA oppure Premi il PULSANTE VERDE INVIA ALLA MAIL CONFIGURATA per completare il processo.";
+}
+ 
+/* ============================
+  BANNER SCADUTI
+============================ */
+function aggiornaBannerScaduti(){
+ clearTimeout(window._bannerTimer);
+ window._bannerTimer = setTimeout(()=>{ aggiornaBannerScaduti_real(); },40);
+}
+function aggiornaBannerScaduti_real(){
+ const count = document.querySelectorAll('.checklist-item.scaduto').length;
+ const banner = document.getElementById('scadutiBanner');
+ if(!banner) return;
+ if(count===0){
+   banner.style.display='none';
+   banner.classList.remove('scaduti-blink');
+   return;
+ }
+ banner.style.display='block';
+ banner.classList.add('scaduti-blink');
+ setTimeout(()=>{
+   banner.classList.remove('scaduti-blink');
+   banner.style.display='none';
+ },3000);
+}
+function triggerBannerScaduti(){ aggiornaBannerScaduti(); }
+ 
+/* ============================
+  FIRME
+============================ */
+const firmeState = {};
+ 
+function mostraCompilatori(){
+ const n = +document.getElementById('numeroCompilatori').value;
+ const box = document.getElementById('compilatoriBox');
+ const prev = {};
+ for(const k in firmeState){
+   if(firmeState.hasOwnProperty(k)){
+     prev[k] = {
+       imgData: firmeState[k].imgData,
+       name: document.getElementById('firmaNome'+k)?.value || ''
+     };
+   }
+ }
+ box.innerHTML = '';
+ for(let i=1;i<=n;i++){
+   const div = document.createElement('div');
+   div.style.marginBottom = '12px';
+   const existingName = prev[i] ? prev[i].name : '';
+   div.innerHTML = `
+     <p style="margin:6px 0;"><strong>✍️ VOLONTARIO ${i}</strong></p>
+     <input type="text" id="firmaNome${i}" placeholder="Nome e Cognome"
+       style="width:100%;padding:6px;margin-bottom:6px;"
+       value="${existingName.replace(/"/g,'&quot;')}">
+     <canvas id="firmaCanvas${i}" class="firma-canvas"></canvas>
+     <div style="margin-top:6px;">
+       <button type="button" class="btn no-print"
+         onclick="pulisciFirma(${i})"
+         style="background:#dc3545;color:#fff;max-width:220px;">
+         🧽 PULISCI FIRMA ${i}
+       </button>
+       <span id="msgFirmaBloc${i}"
+         style="color:red;font-weight:bold;display:none;margin-left:12px;">
+         Firma bloccata
+       </span>
+     </div>
+   `;
+   box.appendChild(div);
+   if(!firmeState[i])
+     firmeState[i] = {canvas:null,ctx:null,bloccata:false,timerFirma:null,imgData:prev[i]?prev[i].imgData:null};
+   else{
+     if(prev[i]) firmeState[i].imgData = prev[i].imgData;
+     firmeState[i].bloccata = false;
+     clearTimeout(firmeState[i].timerFirma);
+   }
+   initCanvas(i);
+ }
+}
+ 
+function initCanvas(i){
+ const canvas = document.getElementById('firmaCanvas'+i);
+ if(!canvas) return;
+ const ctx = canvas.getContext('2d');
+ 
+ function setupSizeAndRestore(){
+   const ratio = window.devicePixelRatio || 1;
+   const wCss = canvas.offsetWidth || 300;
+   const hCss = canvas.offsetHeight || 180;
+   canvas.width = Math.floor(wCss*ratio);
+   canvas.height = Math.floor(hCss*ratio);
+   canvas.style.width = wCss+'px';
+   canvas.style.height = hCss+'px';
+   ctx.setTransform(ratio,0,0,ratio,0,0);
+   ctx.lineWidth = 2;
+   ctx.lineCap = 'round';
+   ctx.strokeStyle = '#000';
+   if(firmeState[i] && firmeState[i].imgData){
+     const img = new Image();
+     img.onload = ()=>{
+       try{ctx.clearRect(0,0,canvas.width,canvas.height);}catch(e){}
+       ctx.drawImage(img,0,0,wCss,hCss);
+     };
+     img.src = firmeState[i].imgData;
+   }else{
+     try{ctx.clearRect(0,0,canvas.width,canvas.height);}catch(e){}
+   }
+ }
+ setupSizeAndRestore();
+ window.addEventListener('resize',()=>setTimeout(setupSizeAndRestore,120));
+ 
+ firmeState[i].canvas = canvas;
+ firmeState[i].ctx = ctx;
+ let drawing = false;
+ 
+ function getPos(e){
+   const rect = canvas.getBoundingClientRect();
+   const ev = e.touches?e.touches[0]:e;
+   return {x:ev.clientX-rect.left,y:ev.clientY-rect.top};
+ }
+ 
+ function start(e){
+   if(firmeState[i].bloccata) return;
+   drawing = true;
+   clearTimeout(firmeState[i].timerFirma);
+   ctx.beginPath();
+   const p = getPos(e);
+   ctx.moveTo(p.x,p.y);
+   e.preventDefault();
+ }
+ function move(e){
+   if(!drawing || firmeState[i].bloccata) return;
+   const p = getPos(e);
+   ctx.lineTo(p.x,p.y);
+   ctx.stroke();
+   clearTimeout(firmeState[i].timerFirma);
+   firmeState[i].timerFirma = setTimeout(()=>{
+     firmeState[i].bloccata = true;
+     const msg = document.getElementById('msgFirmaBloc'+i);
+     if(msg) msg.style.display = 'block';
+     try{firmeState[i].imgData = canvas.toDataURL('image/png');}catch(e){}
+   },4000);
+   e.preventDefault();
+ }
+ function end(e){
+   if(!drawing) return;
+   drawing = false;
+   try{firmeState[i].imgData = canvas.toDataURL('image/png');}catch(e){}
+   clearTimeout(firmeState[i].timerFirma);
+   firmeState[i].timerFirma = setTimeout(()=>{
+     firmeState[i].bloccata = true;
+     const msg = document.getElementById('msgFirmaBloc'+i);
+     if(msg) msg.style.display = 'block';
+   },4000);
+   e && e.preventDefault();
+ }
+ 
+ canvas.addEventListener('mousedown',start);
+ canvas.addEventListener('mousemove',move);
+ canvas.addEventListener('mouseup',end);
+ canvas.addEventListener('mouseout',end);
+ canvas.addEventListener('touchstart',start,{passive:false});
+ canvas.addEventListener('touchmove',move,{passive:false});
+ canvas.addEventListener('touchend',end);
+ 
+ if(firmeState[i] && firmeState[i].imgData){
+   const img = new Image();
+   img.onload = ()=>{
+     try{ctx.clearRect(0,0,canvas.width,canvas.height);}catch(e){}
+     ctx.drawImage(img,0,0,canvas.offsetWidth,canvas.offsetHeight);
+   };
+   img.src = firmeState[i].imgData;
+ }
+}
+ 
+function pulisciFirma(i){
+ const st = firmeState[i];
+ if(!st) return;
+ try{st.ctx.clearRect(0,0,st.canvas.width,st.canvas.height);}catch(e){}
+ st.bloccata = false;
+ st.imgData = null;
+ clearTimeout(st.timerFirma);
+ const msg = document.getElementById('msgFirmaBloc'+i);
+ if(msg) msg.style.display = 'none';
+}
+ 
+/* ============================
+  RESET
+============================ */
+function resetChecklist(){
+ if(!confirm('SICURO DI VOLER AZZERARE TUTTA LA CHECKLIST, FIRME COMPRESE?')) return;
+ 
+ document.querySelectorAll('.checklist-item').forEach(item=>{
+   const sel = item.querySelector('select');
+   if(sel) sel.value='';
+   item.classList.remove('scaduto','ok','ko');
+   item.style.backgroundColor = '';
+   item.style.color='';
+ });
+ 
+ for(let i=1;i<= (+document.getElementById('numeroCompilatori').value||1); i++){
+   if(firmeState[i] && firmeState[i].ctx && firmeState[i].canvas){
+     try{firmeState[i].ctx.clearRect(0,0,firmeState[i].canvas.width,firmeState[i].canvas.height);}catch(e){}
+     firmeState[i].imgData = null;
+     firmeState[i].bloccata = false;
+     clearTimeout(firmeState[i].timerFirma);
+     const msg = document.getElementById('msgFirmaBloc'+i);
+     if(msg) msg.style.display='none';
+   }
+ }
+ 
+ const rie = document.getElementById('riepilogoNegativita');
+ if(rie) rie.style.display='none';
+ 
+ aggiornaProgressivo();
+ 
+ const notice = document.getElementById('resetNotice');
+ if(notice){
+   notice.style.display='block';
+   setTimeout(()=>{ notice.style.display='none'; },2500);
+ }
+ 
+ loadSavedDatesAndApply();
+ aggiornaBannerScaduti();
+ updateAnteprimaButtonState();
+}
+ 
+/* ============================
+  FILENAME PDF
+============================ */
+function filenameWithTarga(){
+ const titolo = 'Checklist_Zaino di Emergenza';
+ const targaRaw = (document.getElementById('targa')?.value || 'NON_TARGA');
+ const targa = String(targaRaw).trim().replace(/\s+/g,'_').replace(/[^A-Za-z0-9_\-]/g,'');
+ const now = new Date();
+ const Y = now.getFullYear();
+ const M = String(now.getMonth()+1).padStart(2,'0');
+ const D = String(now.getDate()).padStart(2,'0');
+ const h = String(now.getHours()).padStart(2,'0');
+ const m = String(now.getMinutes()).padStart(2,'0');
+ const s = String(now.getSeconds()).padStart(2,'0');
+ return `${titolo}_${targa}_${Y}-${M}-${D}_${h}-${m}-${s}.pdf`;
+}
+ 
+/* ============================
+  PDF (A4 automatico) – pulsante giallo
+============================ */
+async function anteprimaCondivisionePDF(){
+ const compilatori = +document.getElementById('numeroCompilatori').value || 0;
+ for(let i=1;i<=compilatori;i++){
+   const st = firmeState[i];
+   if(st && st.canvas){
+     try{ st.imgData = st.canvas.toDataURL('image/png'); }catch(e){}
+   }
+ }
+ 
+ const existingHolder = document.getElementById('pdfSignaturesHolder');
+ if(existingHolder) existingHolder.remove();
+ 
+ const holder = document.createElement('div');
+ holder.id = 'pdfSignaturesHolder';
+ holder.style = 'display:none;';
+ let holderHtml = '';
+ for(let i=1;i<=compilatori;i++){
+   const nome = (document.getElementById('firmaNome'+i)?.value || '(nome non inserito)')
+     .replace(/</g,'&lt;').replace(/>/g,'&gt;');
+   const imgData = (firmeState[i] && firmeState[i].imgData) ? firmeState[i].imgData : null;
+   if(imgData){
+     holderHtml += `
+       <div class="pdf-sign-block"
+            style="margin-top:12px;border-top:1px solid #ccc;padding-top:8px;">
+         <strong>Firma compilatore ${i}: </strong>${nome}<br>
+         <img src="${imgData}" alt="Firma ${i}"
+              style="width:300px;max-width:100%;border:1px solid #000;
+                     display:block;margin-top:6px;">
+       </div>`;
+   }else{
+     holderHtml += `
+       <div class="pdf-sign-block"
+            style="margin-top:12px;border-top:1px solid #ccc;padding-top:8px;">
+         <strong>Firma compilatore ${i}: </strong>${nome}
+         <em>(nessuna firma)</em>
+       </div>`;
+   }
+ }
+ holder.innerHTML = holderHtml;
+ document.body.appendChild(holder);
+ 
+ const scrollPos = window.scrollY;
+ window.scrollTo(0,0);
+ 
+ const bodyCopy = document.body.cloneNode(true);
+ bodyCopy.querySelectorAll('.no-print').forEach(n=>n.remove());
+ 
+ const cloneItems = bodyCopy.querySelectorAll('.checklist-item');
+ cloneItems.forEach((cloneItem,idx)=>{
+   const origItem = document.querySelectorAll('.checklist-item')[idx];
+   if(!origItem) return;
+   const origSelect = origItem.querySelector('select');
+   const cloneSelect = cloneItem.querySelector('select');
+   let val = '-';
+   if(origSelect) val = origSelect.value || '-';
+   if(cloneSelect){
+     const span = document.createElement('div');
+     span.style = 'font-weight:bold;margin-top:6px;';
+     span.textContent = 'Esito: '+val;
+     cloneSelect.parentNode.replaceChild(span,cloneSelect);
+   }
+   const cloneDate = cloneItem.querySelector('input.scad-date');
+   const origDate = origItem.querySelector('input.scad-date');
+   if(cloneDate && origDate){
+     const v = origDate.value || '';
+     const spanD = document.createElement('div');
+     spanD.style = 'margin-top:4px;';
+     spanD.textContent = v ? 'Scadenza: '+v : '';
+     cloneDate.parentNode.replaceChild(spanD,cloneDate);
+   }
+ });
+ 
+ const veicolo = document.getElementById('targa')?.value || 'NON SELEZIONATO';
+ const now = new Date();
+ const dataStr = now.toLocaleDateString('it-IT')+' '+now.toTimeString().slice(0,5);
+ const info = document.createElement('div');
+ info.style = 'font-weight:bold;margin-bottom:12px;';
+ info.textContent = `Checklist: Zaino di Emergenza — Veicolo: ${veicolo} — Data compilazione: ${dataStr}`;
+ const firstH2 = bodyCopy.querySelector('h2');
+ if(firstH2 && firstH2.parentNode) firstH2.parentNode.insertBefore(info,firstH2);
+ 
+ const clonedHolder = bodyCopy.querySelector('#pdfSignaturesHolder');
+ const copyCompilatoriBox = bodyCopy.querySelector('#compilatoriBox');
+ if(copyCompilatoriBox && clonedHolder){
+   copyCompilatoriBox.innerHTML='';
+   [...clonedHolder.children].forEach(node=>{
+     copyCompilatoriBox.appendChild(node.cloneNode(true));
+   });
+   if(clonedHolder.parentNode) clonedHolder.parentNode.removeChild(clonedHolder);
+ }else if(clonedHolder){
+   [...clonedHolder.children].forEach(node=>{
+     bodyCopy.appendChild(node.cloneNode(true));
+   });
+   if(clonedHolder.parentNode) clonedHolder.parentNode.removeChild(clonedHolder);
+ }
+ 
+ const opt = {
+   margin: 10,
+   filename: filenameWithTarga(),
+   image: { type: 'jpeg', quality: 0.98 },
+   html2canvas: {
+     scale: 2,
+     useCORS: true,
+     scrollY: 0,
+     windowWidth: document.body.scrollWidth,
+     letterRendering: true
+   },
+   jsPDF: {
+     unit: 'mm',
+     format: 'a4',
+     orientation: 'portrait',
+     compress: true
+   },
+   pagebreak: {
+     mode: ['css','avoid-all']
+   }
+ };
+ 
+ try{
+   await html2pdf().set(opt).from(bodyCopy).save();
+ }catch(err){
+   console.error('PDF error',err);
+   alert('Errore generazione PDF. Prova a riaprire la pagina o ridurre il contenuto.');
+ }finally{
+   const tmp = document.getElementById('pdfSignaturesHolder');
+   if(tmp) tmp.remove();
+   window.scrollTo(0,scrollPos);
+ }
+}
+ 
+/* ============================
+  BOTTONE PDF (verde se tutto ok)
+============================ */
+function updateAnteprimaButtonState(){
+ const btn = document.getElementById('btnAnteprima');
+ if(!btn) return;
+ const items = document.querySelectorAll('.checklist-item');
+ let allOk = true;
+ for(const item of items){
+   const sel = item.querySelector('select');
+   if(!sel || sel.value!=='SI'){ allOk=false; break; }
+   if(item.classList.contains('scaduto') || item.classList.contains('ko')){
+     allOk=false; break;
+   }
+ }
+ if(allOk){
+   btn.classList.add('green');
+   btn.style.background='#28a745';
+ }else{
+   btn.classList.remove('green');
+   btn.style.background='#ffc107';
+ }
+}
+ 
+/* ============================
+  ON LOAD
+============================ */
+window.addEventListener('DOMContentLoaded',()=>{
+ const ora = new Date().toLocaleString('it-IT');
+ const el1 = document.getElementById('dataOraCorrente');
+ const el2 = document.getElementById('dataOraCorrente2');
+ if(el1) el1.textContent = ora;
+ if(el2) el2.textContent = ora;
+ 
+ // targa da pagina ponte (?targa=...)
+ const params = new URLSearchParams(window.location.search);
+ const targaURL = params.get('targa');
+ if(targaURL){
+   const tEl = document.getElementById('targa');
+   if(tEl) tEl.value = targaURL.toUpperCase();
+ }
+ 
+ mostraCompilatori();
+ loadSavedDatesAndApply();
+ 
+ document.querySelectorAll('.checklist-item select').forEach(sel=>{
+   sel.addEventListener('change',()=>{ valuta(sel); });
+ });
+ aggiornaProgressivo();
+ triggerBannerScaduti();
+ updateAnteprimaButtonState();
+ 
+ document.addEventListener('change',e=>{
+   if(e.target && e.target.matches('input.scad-date')) verifica(e.target);
+ });
+});
+ 
+/* ======================================================
+  📩 INVIO MAIL – usa mail in chiaro salvata da index_impostazioni
+====================================================== */
+ 
+/* genera PDF (stessa struttura di anteprima) ma in base64, senza salvarlo */
+async function generaPdfBase64PerInvio(){
+const compilatori = +document.getElementById('numeroCompilatori').value || 0; 
+for(let i=1;i<=compilatori;i++){ 
+  const st = firmeState[i];
+  if(st && st.canvas){
+    try{ st.imgData = st.canvas.toDataURL('image/png'); }catch(e){}
+  }
+}
+ 
+const existingHolder = document.getElementById('pdfSignaturesHolder'); 
+if(existingHolder) existingHolder.remove(); 
+ 
+const holder = document.createElement('div'); 
+holder.id = 'pdfSignaturesHolder';
+holder.style = 'display:none;'; 
+let holderHtml = ''; 
+for(let i=1;i<=compilatori;i++){ 
+  const nome = (document.getElementById('firmaNome'+i)?.value || '(nome non inserito)')
+    .replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const imgData = (firmeState[i] && firmeState[i].imgData) ? firmeState[i].imgData : null;
+  if(imgData){
+    holderHtml += `
+      <div class="pdf-sign-block"
+           style="margin-top:12px;border-top:1px solid #ccc;padding-top:8px;">
+        <strong>Firma compilatore ${i}: </strong>${nome}<br>
+        <img src="${imgData}" alt="Firma ${i}"
+             style="width:300px;max-width:100%;border:1px solid #000;
+                    display:block;margin-top:6px;">
+      </div>`;
+  }else{
+    holderHtml += `
+      <div class="pdf-sign-block"
+           style="margin-top:12px;border-top:1px solid #ccc;padding-top:8px;">
+        <strong>Firma compilatore ${i}: </strong>${nome}
+        <em>(nessuna firma)</em>
+      </div>`;
+  }
+}
+holder.innerHTML = holderHtml; 
+document.body.appendChild(holder); 
+ 
+const scrollPos = window.scrollY; 
+window.scrollTo(0,0); 
+ 
+const bodyCopy = document.body.cloneNode(true); 
+bodyCopy.querySelectorAll('.no-print').forEach(n=>n.remove()); 
+ 
+const cloneItems = bodyCopy.querySelectorAll('.checklist-item'); 
+cloneItems.forEach((cloneItem,idx)=>{ 
+  const origItem = document.querySelectorAll('.checklist-item')[idx];
+  if(!origItem) return;
+  const origSelect = origItem.querySelector('select');
+  const cloneSelect = cloneItem.querySelector('select');
+  let val = '-';
+  if(origSelect) val = origSelect.value || '-';
+  if(cloneSelect){
+    const span = document.createElement('div');
+    span.style = 'font-weight:bold;margin-top:6px;';
+    span.textContent = 'Esito: '+val;
+    cloneSelect.parentNode.replaceChild(span,cloneSelect);
+  }
+  const cloneDate = cloneItem.querySelector('input.scad-date');
+  const origDate = origItem.querySelector('input.scad-date');
+  if(cloneDate && origDate){
+    const v = origDate.value || '';
+    const spanD = document.createElement('div');
+    spanD.style = 'margin-top:4px;';
+    spanD.textContent = v ? 'Scadenza: '+v : '';
+    cloneDate.parentNode.replaceChild(spanD,cloneDate);
+  }
+});
+ 
+const veicolo = document.getElementById('targa')?.value || 'NON SELEZIONATO'; 
+const now = new Date(); 
+const dataStr = now.toLocaleDateString('it-IT')+' '+now.toTimeString().slice(0,5); 
+const info = document.createElement('div'); 
+info.style = 'font-weight:bold;margin-bottom:12px;'; 
+info.textContent = ` Checklist: Zaino di Emergenza — Veicolo: ${veicolo} — Data compilazione: ${dataStr}`; 
+const firstH2 = bodyCopy.querySelector('h2'); 
+if(firstH2 && firstH2.parentNode) firstH2.parentNode.insertBefore(info,firstH2); 
+ 
+const clonedHolder = bodyCopy.querySelector('#pdfSignaturesHolder'); 
+const copyCompilatoriBox = bodyCopy.querySelector('#compilatoriBox'); 
+if(copyCompilatoriBox && clonedHolder){ 
+  copyCompilatoriBox.innerHTML='';
+  [...clonedHolder.children].forEach(node=>{
+    copyCompilatoriBox.appendChild(node.cloneNode(true));
+  });
+  if(clonedHolder.parentNode) clonedHolder.parentNode.removeChild(clonedHolder);
+}else if(clonedHolder){ 
+  [...clonedHolder.children].forEach(node=>{
+    bodyCopy.appendChild(node.cloneNode(true));
+  });
+  if(clonedHolder.parentNode) clonedHolder.parentNode.removeChild(clonedHolder);
+}
+ 
+const opt = { 
+  margin: 10,
+  filename: filenameWithTarga(),
+  image: { type: 'jpeg', quality: 0.98 },
+  html2canvas: {
+    scale: 2,
+    useCORS: true,
+    scrollY: 0,
+    windowWidth: document.body.scrollWidth,
+    letterRendering: true
+  },
+  jsPDF: {
+    unit: 'mm',
+    format: 'a4',
+    orientation: 'portrait',
+    compress: true
+  },
+  pagebreak: {
+    mode: ['css','avoid-all']
+  }
+};
+ 
+try{ 
+  const base64 = await new Promise((resolve,reject)=>{
+    html2pdf()
+      .set(opt)
+      .from(bodyCopy)
+      .toPdf()
+      .get('pdf')
+      .then(pdf=>{
+        const dataUri = pdf.output('datauristring');
+        const parts = dataUri.split(',');
+        resolve(parts[1] || '');
+      })
+      .catch(reject);
+  });
+  return base64;
+}finally{ 
+  const tmp = document.getElementById('pdfSignaturesHolder');
+  if(tmp) tmp.remove();
+  window.scrollTo(0,scrollPos);
+}
+}
+ 
+/* INVIO MAIL (pulsante verde) */
+ 
+ 
+/* ======================================================
+  📩 INVIO CHECKLIST VIA MAIL + DRIVE (STANDARD UNICO)
+  Usa:
+  - index_impostazioni.html
+  - load-config.js
+  - upload-drive.js
+====================================================== */
+async function inviaChecklistViaMail(){
+ 
+ /* ===============================
+    1️⃣ CONFIGURAZIONE
+ =============================== */
+ const societa = localStorage.getItem("CODICE_SOCIETA");
+ const rawCfg  = localStorage.getItem("IMPOSTAZIONI_MISERICORDIA");
+ 
+ let localCfg = {};
+ try{
+   localCfg = JSON.parse(
+     localStorage.getItem("IMPOSTAZIONI_MISERICORDIA_LOCAL") || "{}"
+   );
+ }catch(e){
+   localCfg = {};
+ }
+ 
+ if(!societa || !rawCfg){
+   alert("❌ Configurazione mancante.\nApri index_impostazioni.html e salva le impostazioni.");
+   return;
+ }
+ 
+ let cfg;
+ try{
+   cfg = JSON.parse(rawCfg);
+ }catch(e){
+   alert("❌ Errore lettura configurazione.");
+   return;
+ }
+ 
+ const mailTo = cfg?.mail?.to;
+ if(!mailTo){
+   alert("❌ Nessuna mail configurata.\nApri index_impostazioni.html.");
+   return;
+ }
+ 
+ const depositoDrive = localCfg.documento_definitivo === true;
+ 
+ /* ===============================
+    2️⃣ GENERA PDF BASE64
+ =============================== */
+ let pdfBase64;
+ try{
+   pdfBase64 = await generaPdfBase64PerInvio();
+ }catch(e){
+   console.error(e);
+   alert("❌ Errore generazione PDF.");
+   return;
+ }
+ 
+ if(!pdfBase64){
+   alert("❌ PDF non generato.");
+   return;
+ }
+ 
+ /* ===============================
+    3️⃣ DATI DOCUMENTO
+ =============================== */
+ const modulo = " Checklist Zaino di Emergenza";
+ const data_servizio = new Date().toISOString().slice(0,10);
+ 
+ const payload = {
+   societa,
+   modulo,
+   tipo: "CHECKLIST",
+   data_servizio,
+   deposito_drive: depositoDrive,
+   email: {
+     to: [mailTo]
+   },
+   pdf: {
+     name: filenameWithTarga(),
+     data: pdfBase64
+   }
+ };
+ 
+ /* ===============================
+    4️⃣ INVIO A NETLIFY FUNCTION
+ =============================== */
+ try{
+   const resp = await fetch("/.netlify/functions/upload-drive", {
+     method: "POST",
+     headers: { "Content-Type": "application/json" },
+     body: JSON.stringify(payload)
+   });
+ 
+   let result;
+   try{
+     result = await resp.json();
+   }catch(e){
+     throw new Error("Risposta non valida dal server");
+   }
+ 
+   if(!resp.ok || result.success !== true){
+     throw new Error(result.error || "Errore invio documento");
+   }
+ 
+   alert(
+     depositoDrive
+       ? "✅ Checklist inviata via mail e archiviata su Drive."
+       : "✅ Checklist inviata via mail (modalità TEST / SCUOLA)."
+   );
+ 
+ }catch(err){
+   console.error("Errore invio checklist:", err);
+   alert(
+     "❌ Errore durante l'invio.\n" +
+     "Verifica:\n" +
+     "- Connessione\n" +
+     "- Variabili ENV Netlify\n" +
+     "- upload-drive.js"
+   );
+ }
+}
+</script>
+</body>
+</html>
