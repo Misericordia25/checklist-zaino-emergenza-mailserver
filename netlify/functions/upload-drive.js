@@ -1,13 +1,5 @@
-/**
- * upload-drive.js (Netlify Function)
- * - Upload PDF/Excel su Drive (OAuth utente app.misericordia25)
- * - Crea albero: ROOT / ANNO / MODULO / MESE
- * - Invia email (Nodemailer)
- */
-
 const { google } = require("googleapis");
 const nodemailer = require("nodemailer");
-const { Readable } = require("stream");
 
 /* =====================================================
    ROOT DRIVE PER SOCIETÀ
@@ -19,44 +11,30 @@ const ROOTS = {
 };
 
 /* =====================================================
-   AUTH OAUTH
-===================================================== */
-function getOAuthClient() {
-  const clientId = process.env.GOOGLE_CLIENT_ID;
-  const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
-  const refreshToken = process.env.GOOGLE_REFRESH_TOKEN;
-
-  if (!clientId || !clientSecret || !refreshToken) {
-    throw new Error("ENV mancanti per OAuth");
-  }
-
-  const oAuth2Client = new google.auth.OAuth2(
-    clientId,
-    clientSecret,
-    "urn:ietf:wg:oauth:2.0:oob"
-  );
-
-  oAuth2Client.setCredentials({ refresh_token: refreshToken });
-  return oAuth2Client;
-}
-
-/* =====================================================
    UTILS DRIVE
 ===================================================== */
 async function getOrCreateFolder(drive, name, parentId) {
-  const safeName = String(name).replace(/'/g, "\\'");
   const q = [
     `'${parentId}' in parents`,
     `mimeType='application/vnd.google-apps.folder'`,
-    `name='${safeName}'`,
+    `name='${name}'`,
     `trashed=false`
   ].join(" and ");
 
-  const res = await drive.files.list({ q, fields: "files(id,name)" });
-  if (res.data.files?.length) return res.data.files[0].id;
+  const res = await drive.files.list({
+    q,
+    fields: "files(id,name)",
+    spaces: "drive"
+  });
+
+  if (res.data.files.length) return res.data.files[0].id;
 
   const folder = await drive.files.create({
-    requestBody: { name, mimeType: "application/vnd.google-apps.folder", parents: [parentId] },
+    requestBody: {
+      name,
+      mimeType: "application/vnd.google-apps.folder",
+      parents: [parentId]
+    },
     fields: "id"
   });
 
@@ -65,13 +43,17 @@ async function getOrCreateFolder(drive, name, parentId) {
 
 function meseFolder(data) {
   const mesi = [
-    "01_GENNAIO","02_FEBBRAIO","03_MARZO","04_APRILE","05_MAGGIO","06_GIUGNO",
-    "07_LUGLIO","08_AGOSTO","09_SETTEMBRE","10_OTTOBRE","11_NOVEMBRE","12_DICEMBRE"
+    "01_GENNAIO","02_FEBBRAIO","03_MARZO","04_APRILE",
+    "05_MAGGIO","06_GIUGNO","07_LUGLIO","08_AGOSTO",
+    "09_SETTEMBRE","10_OTTOBRE","11_NOVEMBRE","12_DICEMBRE"
   ];
   return mesi[new Date(data).getMonth()];
 }
 
-async function buildTree(drive, societa, modulo, data) {
+/* =====================================================
+   NUOVA BUILD TREE
+===================================================== */
+async function buildTree(drive, societa, modulo, data, tipo) {
   const rootId = ROOTS[societa];
   if (!rootId) throw new Error("Società non riconosciuta");
 
@@ -79,17 +61,26 @@ async function buildTree(drive, societa, modulo, data) {
   const mese = meseFolder(data);
 
   const annoId = await getOrCreateFolder(drive, anno, rootId);
-  const modId = await getOrCreateFolder(drive, modulo, annoId);
-  return await getOrCreateFolder(drive, mese, modId);
-}
 
-function toDriveViewLink(id) {
-  return `https://drive.google.com/file/d/${id}/view`;
-}
+  /* ============================
+     CHECKLIST → unica cartella
+  ============================ */
+  if (tipo === "CHECKLIST") {
+    const checkRoot = await getOrCreateFolder(drive, "CHECKLIST", annoId);
+    const meseId = await getOrCreateFolder(drive, mese, checkRoot);
+    return { pdfFolder: meseId, excelFolder: null };
+  }
 
-function bufferFromBase64(b64, label = "file") {
-  if (!b64) throw new Error(`${label} base64 mancante`);
-  return Buffer.from(b64, "base64");
+  /* ============================
+     TS → cartelle separate
+  ============================ */
+  const tsRoot = await getOrCreateFolder(drive, modulo, annoId);
+  const meseId = await getOrCreateFolder(drive, mese, tsRoot);
+
+  const pdfFolder = await getOrCreateFolder(drive, "PDF", meseId);
+  const excelFolder = await getOrCreateFolder(drive, "EXCEL", meseId);
+
+  return { pdfFolder, excelFolder };
 }
 
 /* =====================================================
@@ -100,97 +91,110 @@ exports.handler = async (event) => {
     if (!event.body) throw new Error("Body mancante");
 
     const {
-      societa, modulo, tipo, data_servizio,
-      deposito_drive, email, pdf, excel
+      societa,
+      modulo,
+      tipo,               // "TS" | "CHECKLIST"
+      data_servizio,      // YYYY-MM-DD
+      deposito_drive,     // true | false
+      email,              // { to:[], cc:[] }
+      pdf,                // { name, data(base64) }
+      excel               // opzionale (TS)
     } = JSON.parse(event.body);
 
-    if (!societa || !modulo || !tipo || !data_servizio) {
+    if (!societa || !modulo || !tipo || !data_servizio)
       throw new Error("Parametri obbligatori mancanti");
-    }
 
     /* =====================================================
-       DRIVE
+       AUTH GOOGLE
     ===================================================== */
     let drive = null;
     if (deposito_drive === true) {
-      drive = google.drive({ version: "v3", auth: getOAuthClient() });
+      const auth = new google.auth.JWT(
+        process.env.GCP_CLIENT_EMAIL,
+        null,
+        process.env.GCP_PRIVATE_KEY.replace(/\\n/g, "\n"),
+        ["https://www.googleapis.com/auth/drive"]
+      );
+      drive = google.drive({ version: "v3", auth });
     }
 
+    /* =====================================================
+       UPLOAD DRIVE
+    ===================================================== */
     let pdfLink = null;
     let excelLink = null;
 
     if (deposito_drive === true && drive) {
-      const parentId = await buildTree(drive, societa, modulo, data_servizio);
+      const { pdfFolder, excelFolder } =
+        await buildTree(drive, societa, modulo, data_servizio, tipo);
 
-      if (pdf) {
+      /* --- PDF --- */
+      if (pdf && pdfFolder) {
         const resPdf = await drive.files.create({
-          requestBody: { name: pdf.name, parents: [parentId] },
-          media: { mimeType: "application/pdf", body: Readable.from(bufferFromBase64(pdf.data)) },
-          fields: "id"
-        });
-        pdfLink = toDriveViewLink(resPdf.data.id);
-      }
-
-      if (tipo === "TS" && excel) {
-        const resXls = await drive.files.create({
-          requestBody: { name: excel.name, parents: [parentId] },
+          requestBody: { name: pdf.name, parents: [pdfFolder] },
           media: {
-            mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            body: Readable.from(bufferFromBase64(excel.data))
+            mimeType: "application/pdf",
+            body: Buffer.from(pdf.data, "base64")
           },
           fields: "id"
         });
-        excelLink = toDriveViewLink(resXls.data.id);
+        pdfLink = `https://drive.google.com/file/d/${resPdf.data.id}/view`;
       }
-    }
 
-    /* =====================================================
-       EMAIL SOLO PER CHECKLIST
-    ===================================================== */
-    if (tipo === "CHECKLIST") {
-      const transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 587,
-        secure: false,
-        auth: {
-          user: process.env.MAIL_USER,
-          pass: process.env.MAIL_PWD
-        }
-      });
-
-      const attachments = [];
-      if (pdf) {
-        attachments.push({
-          filename: pdf.name,
-          content: bufferFromBase64(pdf.data)
+      /* --- EXCEL (solo TS) --- */
+      if (tipo === "TS" && excel && excelFolder) {
+        const resXls = await drive.files.create({
+          requestBody: { name: excel.name, parents: [excelFolder] },
+          media: {
+            mimeType:
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            body: Buffer.from(excel.data, "base64")
+          },
+          fields: "id"
         });
+        excelLink = `https://drive.google.com/file/d/${resXls.data.id}/view`;
       }
-
-      let text =
-        `Documento: ${modulo}\n` +
-        `Società: ${societa}\n` +
-        `Data: ${data_servizio}\n`;
-
-      if (deposito_drive === true) {
-        if (pdfLink) text += `\nPDF su Drive: ${pdfLink}`;
-        if (excelLink) text += `\nExcel su Drive: ${excelLink}`;
-      } else {
-        text += `\nModalità TEST / SCUOLA (nessun deposito su Drive)`;
-      }
-
-      await transporter.sendMail({
-        from: process.env.MAIL_USER,
-        to: email?.to || [],
-        cc: email?.cc || [],
-        subject: `${modulo} – ${societa}`,
-        text,
-        attachments
-      });
     }
 
     /* =====================================================
-       RISPOSTA OK
+       INVIO EMAIL
     ===================================================== */
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASSWORD
+      }
+    });
+
+    const attachments = [];
+    if (tipo === "CHECKLIST" && pdf) {
+      attachments.push({
+        filename: pdf.name,
+        content: Buffer.from(pdf.data, "base64")
+      });
+    }
+
+    let text = `Documento: ${modulo}\nSocietà: ${societa}\nData: ${data_servizio}\n`;
+
+    if (deposito_drive === true) {
+      if (pdfLink)   text += `\nPDF su Drive: ${pdfLink}`;
+      if (excelLink) text += `\nExcel su Drive: ${excelLink}`;
+    } else {
+      text += `\nModalità TEST / SCUOLA (nessun deposito su Drive)`;
+    }
+
+    await transporter.sendMail({
+      from: process.env.MAIL_USER,
+      to: email?.to || [],
+      cc: email?.cc || [],
+      subject: `${modulo} – ${societa}`,
+      text,
+      attachments
+    });
+
     return {
       statusCode: 200,
       body: JSON.stringify({
@@ -205,10 +209,7 @@ exports.handler = async (event) => {
     console.error("UPLOAD ERROR:", err);
     return {
       statusCode: 500,
-      body: JSON.stringify({
-        success: false,
-        error: err.message
-      })
+      body: JSON.stringify({ success: false, error: err.message })
     };
   }
 };
