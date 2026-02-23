@@ -51,7 +51,7 @@ function meseFolder(data) {
 }
 
 /* =====================================================
-   NUOVA BUILD TREE
+   BUILD TREE DEFINITIVA
 ===================================================== */
 async function buildTree(drive, societa, modulo, data, tipo) {
   const rootId = ROOTS[societa];
@@ -93,19 +93,19 @@ exports.handler = async (event) => {
     const {
       societa,
       modulo,
-      tipo,               // "TS" | "CHECKLIST"
-      data_servizio,      // YYYY-MM-DD
-      deposito_drive,     // true | false
-      email,              // { to:[], cc:[] }
-      pdf,                // { name, data(base64) }
-      excel               // opzionale (TS)
+      tipo,
+      data_servizio,
+      deposito_drive,
+      email,
+      pdf,
+      excel
     } = JSON.parse(event.body);
 
     if (!societa || !modulo || !tipo || !data_servizio)
       throw new Error("Parametri obbligatori mancanti");
 
     /* =====================================================
-       AUTH GOOGLE
+       AUTH GOOGLE (vecchio flusso stabile)
     ===================================================== */
     let drive = null;
     if (deposito_drive === true) {
@@ -119,7 +119,7 @@ exports.handler = async (event) => {
     }
 
     /* =====================================================
-       UPLOAD DRIVE
+       UPLOAD DRIVE (vecchio flusso + nuova struttura)
     ===================================================== */
     let pdfLink = null;
     let excelLink = null;
@@ -157,7 +157,7 @@ exports.handler = async (event) => {
     }
 
     /* =====================================================
-       INVIO EMAIL
+       INVIO EMAIL (identico)
     ===================================================== */
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
