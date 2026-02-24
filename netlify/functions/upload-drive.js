@@ -50,10 +50,7 @@ function meseFolder(data) {
   return mesi[new Date(data).getMonth()];
 }
 
-/* =====================================================
-   BUILD TREE DEFINITIVA
-===================================================== */
-async function buildTree(drive, societa, modulo, data, tipo) {
+async function buildTree(drive, societa, modulo, data) {
   const rootId = ROOTS[societa];
   if (!rootId) throw new Error("Società non riconosciuta");
 
@@ -61,26 +58,10 @@ async function buildTree(drive, societa, modulo, data, tipo) {
   const mese = meseFolder(data);
 
   const annoId = await getOrCreateFolder(drive, anno, rootId);
+  const modId  = await getOrCreateFolder(drive, modulo, annoId);
+  const meseId = await getOrCreateFolder(drive, mese, modId);
 
-  /* ============================
-     CHECKLIST → unica cartella
-  ============================ */
-  if (tipo === "CHECKLIST") {
-    const checkRoot = await getOrCreateFolder(drive, "CHECKLIST", annoId);
-    const meseId = await getOrCreateFolder(drive, mese, checkRoot);
-    return { pdfFolder: meseId, excelFolder: null };
-  }
-
-  /* ============================
-     TS → cartelle separate
-  ============================ */
-  const tsRoot = await getOrCreateFolder(drive, modulo, annoId);
-  const meseId = await getOrCreateFolder(drive, mese, tsRoot);
-
-  const pdfFolder = await getOrCreateFolder(drive, "PDF", meseId);
-  const excelFolder = await getOrCreateFolder(drive, "EXCEL", meseId);
-
-  return { pdfFolder, excelFolder };
+  return meseId;
 }
 
 /* =====================================================
@@ -93,8 +74,8 @@ exports.handler = async (event) => {
     const {
       societa,
       modulo,
-      tipo,
-      data_servizio,
+      tipo,               // "TS" | "CHECKLIST"
+      data_servizio,      // YYYY-MM-DD
       deposito_drive,
       email,
       pdf,
@@ -105,7 +86,7 @@ exports.handler = async (event) => {
       throw new Error("Parametri obbligatori mancanti");
 
     /* =====================================================
-       AUTH GOOGLE (vecchio flusso stabile)
+       AUTH GOOGLE
     ===================================================== */
     let drive = null;
     if (deposito_drive === true) {
@@ -119,32 +100,53 @@ exports.handler = async (event) => {
     }
 
     /* =====================================================
-       UPLOAD DRIVE (vecchio flusso + nuova struttura)
+       UPLOAD DRIVE
     ===================================================== */
     let pdfLink = null;
     let excelLink = null;
 
     if (deposito_drive === true && drive) {
-      const { pdfFolder, excelFolder } =
-        await buildTree(drive, societa, modulo, data_servizio, tipo);
 
-      /* --- PDF --- */
-      if (pdf && pdfFolder) {
+      const meseId = await buildTree(
+        drive,
+        societa,
+        modulo,
+        data_servizio
+      );
+
+      let pdfParentId = meseId;
+      let excelParentId = meseId;
+
+      // Se TS → crea sottocartelle PDF ed EXCEL
+      if (tipo === "TS") {
+        pdfParentId   = await getOrCreateFolder(drive, "PDF", meseId);
+        excelParentId = await getOrCreateFolder(drive, "EXCEL", meseId);
+      }
+
+      // Upload PDF
+      if (pdf) {
         const resPdf = await drive.files.create({
-          requestBody: { name: pdf.name, parents: [pdfFolder] },
+          requestBody: {
+            name: pdf.name,
+            parents: [pdfParentId]
+          },
           media: {
             mimeType: "application/pdf",
             body: Buffer.from(pdf.data, "base64")
           },
           fields: "id"
         });
+
         pdfLink = `https://drive.google.com/file/d/${resPdf.data.id}/view`;
       }
 
-      /* --- EXCEL (solo TS) --- */
-      if (tipo === "TS" && excel && excelFolder) {
+      // Upload Excel solo se TS
+      if (tipo === "TS" && excel) {
         const resXls = await drive.files.create({
-          requestBody: { name: excel.name, parents: [excelFolder] },
+          requestBody: {
+            name: excel.name,
+            parents: [excelParentId]
+          },
           media: {
             mimeType:
               "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -152,12 +154,13 @@ exports.handler = async (event) => {
           },
           fields: "id"
         });
+
         excelLink = `https://drive.google.com/file/d/${resXls.data.id}/view`;
       }
     }
 
     /* =====================================================
-       INVIO EMAIL (identico)
+       INVIO EMAIL
     ===================================================== */
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
@@ -170,6 +173,7 @@ exports.handler = async (event) => {
     });
 
     const attachments = [];
+
     if (tipo === "CHECKLIST" && pdf) {
       attachments.push({
         filename: pdf.name,
