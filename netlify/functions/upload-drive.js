@@ -22,25 +22,29 @@ async function getOrCreateFolder(drive, name, parentId) {
     `trashed=false`
   ].join(" and ");
 
-  const res = await drive.files.list({
-    q,
-    fields: "files(id,name)",
-    spaces: "drive",
-    includeItemsFromAllDrives: true,
-    supportsAllDrives: true
-  });
+ const res = await drive.files.list({
+  q,
+  fields: "files(id,name)",
+  spaces: "drive",
+  includeItemsFromAllDrives: true,
+  supportsAllDrives: true
+});
+
+  
 
   if (res.data.files.length) return res.data.files[0].id;
 
+ 
   const folder = await drive.files.create({
-    requestBody: {
-      name,
-      mimeType: "application/vnd.google-apps.folder",
-      parents: [parentId]
-    },
-    fields: "id",
-    supportsAllDrives: true
-  });
+  requestBody: {
+    name,
+    mimeType: "application/vnd.google-apps.folder",
+    parents: [parentId]
+  },
+  fields: "id",
+  supportsAllDrives: true
+});
+
 
   return folder.data.id;
 }
@@ -54,7 +58,7 @@ function meseFolder(data) {
   return mesi[new Date(data).getMonth()];
 }
 
-async function buildTree(drive, societa, modulo, tipo, data) {
+async function buildTree(drive, societa, modulo, data) {
   const rootId = ROOTS[societa];
   if (!rootId) throw new Error("Società non riconosciuta");
 
@@ -65,15 +69,7 @@ async function buildTree(drive, societa, modulo, tipo, data) {
   const modId  = await getOrCreateFolder(drive, modulo, annoId);
   const meseId = await getOrCreateFolder(drive, mese, modId);
 
-  // 🔴 SOLO MODIFICA: struttura TS con sottocartelle
-  if (tipo === "TS") {
-    const pdfId   = await getOrCreateFolder(drive, "PDF", meseId);
-    const excelId = await getOrCreateFolder(drive, "EXCEL", meseId);
-    return { pdfId, excelId };
-  }
-
-  // CHECKLIST → come prima
-  return { pdfId: meseId };
+  return meseId;
 }
 
 /* =====================================================
@@ -86,19 +82,19 @@ exports.handler = async (event) => {
     const {
       societa,
       modulo,
-      tipo,
-      data_servizio,
-      deposito_drive,
-      email,
-      pdf,
-      excel
+      tipo,               // "TS" | "CHECKLIST"
+      data_servizio,      // YYYY-MM-DD
+      deposito_drive,     // true | false
+      email,              // { to:[], cc:[] }
+      pdf,                // { name, data(base64) }
+      excel               // opzionale (TS)
     } = JSON.parse(event.body);
 
     if (!societa || !modulo || !tipo || !data_servizio)
       throw new Error("Parametri obbligatori mancanti");
 
     /* =====================================================
-       AUTH GOOGLE
+       AUTH GOOGLE (solo se deposito_drive === true)
     ===================================================== */
     let drive = null;
     if (deposito_drive === true) {
@@ -112,49 +108,38 @@ exports.handler = async (event) => {
     }
 
     /* =====================================================
-       UPLOAD DRIVE
+       UPLOAD DRIVE (solo se DEFINITIVO)
     ===================================================== */
     let pdfLink = null;
     let excelLink = null;
 
     if (deposito_drive === true && drive) {
+      const parentId = await buildTree(drive, societa, modulo, data_servizio);
 
-      const folders = await buildTree(
-        drive,
-        societa,
-        modulo,
-        tipo,
-        data_servizio
-      );
-
-      // PDF
       if (pdf) {
         const resPdf = await drive.files.create({
-          requestBody: { name: pdf.name, parents: [folders.pdfId] },
+          requestBody: { name: pdf.name, parents: [parentId] },
           media: {
             mimeType: "application/pdf",
             body: Readable.from(Buffer.from(pdf.data, "base64"))
           },
           fields: "id",
-          supportsAllDrives: true
+supportsAllDrives: true
         });
-
         pdfLink = `https://drive.google.com/file/d/${resPdf.data.id}/view`;
       }
 
-      // EXCEL solo TS
       if (tipo === "TS" && excel) {
         const resXls = await drive.files.create({
-          requestBody: { name: excel.name, parents: [folders.excelId] },
+          requestBody: { name: excel.name, parents: [parentId] },
           media: {
             mimeType:
               "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             body: Readable.from(Buffer.from(excel.data, "base64"))
           },
           fields: "id",
-          supportsAllDrives: true
+supportsAllDrives: true
         });
-
         excelLink = `https://drive.google.com/file/d/${resXls.data.id}/view`;
       }
     }
@@ -168,10 +153,11 @@ exports.handler = async (event) => {
       secure: false,
       auth: {
         user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PWD
+        pass: process.env.MAIL_PASSWORD
       }
     });
 
+    // Allegati: SOLO checklist
     const attachments = [];
     if (tipo === "CHECKLIST" && pdf) {
       attachments.push({
