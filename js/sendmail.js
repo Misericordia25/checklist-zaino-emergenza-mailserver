@@ -1,5 +1,5 @@
 // ============================================================
-//  NETLIFY FUNCTION — INVIO EMAIL CON LOG DETTAGLIATI (GMAIL)
+//  NETLIFY FUNCTION — INVIO EMAIL (GMAIL) CON VARIABILI MAIL_*
 // ============================================================
 
 const nodemailer = require("nodemailer");
@@ -8,10 +8,7 @@ exports.handler = async (event, context) => {
   console.log("=== SENDMAIL FUNCTION START ===");
 
   try {
-    console.log("HTTP METHOD:", event.httpMethod);
-
     if (event.httpMethod !== "POST") {
-      console.log("ERRORE: Metodo non consentito");
       return {
         statusCode: 405,
         body: "Method Not Allowed"
@@ -21,7 +18,6 @@ exports.handler = async (event, context) => {
     // ------------------------------------------------------------
     // LETTURA BODY
     // ------------------------------------------------------------
-    console.log("Parsing JSON body...");
     const data = JSON.parse(event.body || "{}");
 
     const to = data.to;
@@ -30,10 +26,7 @@ exports.handler = async (event, context) => {
     const filename = data.filename || "checklist.pdf";
     const pdfBase64 = data.pdfBase64;
 
-    console.log("Dati ricevuti:", { to, subject, filename });
-
     if (!to || !pdfBase64) {
-      console.log("ERRORE: Parametri mancanti");
       return {
         statusCode: 400,
         body: "Missing parameters: to or pdfBase64"
@@ -41,22 +34,21 @@ exports.handler = async (event, context) => {
     }
 
     // ------------------------------------------------------------
-    // CONFIGURAZIONE SMTP
+    // CONFIGURAZIONE SMTP (USA LE TUE VARIABILI MAIL_*)
     // ------------------------------------------------------------
-    console.log("Configurazione SMTP...");
-
-    console.log("SMTP_HOST:", process.env.SMTP_HOST);
-    console.log("SMTP_PORT:", process.env.SMTP_PORT);
-    console.log("SMTP_USER:", process.env.SMTP_USER);
-    console.log("SMTP_FROM:", process.env.SMTP_FROM);
+    console.log("SMTP CONFIG:");
+    console.log("MAIL_HOST:", process.env.MAIL_HOST);
+    console.log("MAIL_PORT:", process.env.MAIL_PORT);
+    console.log("MAIL_USER:", process.env.MAIL_USER);
+    console.log("MAIL_FROM:", process.env.MAIL_FROM);
 
     const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,            // smtp.gmail.com
-      port: Number(process.env.SMTP_PORT),    // 587
-      secure: false,                          // Gmail richiede STARTTLS
+      host: process.env.MAIL_HOST,              // smtp.gmail.com
+      port: Number(process.env.MAIL_PORT),      // 587
+      secure: process.env.MAIL_SECURE === "true", // false per Gmail STARTTLS
       auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASSWORD
       },
       tls: {
         rejectUnauthorized: false
@@ -76,7 +68,7 @@ exports.handler = async (event, context) => {
     console.log("Invio email a:", to);
 
     const mailResult = await transporter.sendMail({
-      from: process.env.SMTP_FROM || process.env.SMTP_USER,
+      from: process.env.MAIL_FROM || process.env.MAIL_USER,
       to: to,
       subject: subject,
       text: text,
@@ -103,14 +95,12 @@ exports.handler = async (event, context) => {
   } catch (err) {
     console.error("=== ERRORE DURANTE L'INVIO ===");
     console.error("Messaggio:", err.message);
-    console.error("Stack:", err.stack);
 
     return {
       statusCode: 500,
       body: JSON.stringify({
         success: false,
-        error: err.message,
-        stack: err.stack
+        error: err.message
       })
     };
   }
