@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-<title>Checklist Ambulanza A-ALS - Misericordia</title>
+<title>Checklist Ambulanza A-BLS - Misericordia</title>
  
 <!-- librerie -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -12,42 +12,42 @@
 <style>
 /* --- STILI ORIGINALI (invariati salvo fix per layout verticale) --- */
 body{
- font-family: Arial, sans-serif;
- background:#f4faff;
- padding:20px;
- font-size:18px;
- color:#222;
- max-width:100%;
- box-sizing:border-box;
+font-family: Arial, sans-serif;
+background:#f4faff; 
+padding:20px;
+font-size:18px;
+color:#222; 
+max-width:100%;
+box-sizing:border-box; 
 }
 h1,h2,h3{word-break:break-word;}
 h2{
- background:#007BFF;
- color:#fff;
- padding:10px;
- border-radius:6px;
- font-size:22px;
+background:#007BFF; 
+color:#fff; 
+padding:10px;
+border-radius:6px;
+font-size:22px;
 }
 h3{
- margin-top:30px;
- color:#007BFF;
- font-size:20px;
+margin-top:30px;
+color:#007BFF; 
+font-size:20px;
 }
 label,select,input,textarea{font-size:18px;}
 .copertina{
- text-align:left;
- margin-top:100px;
- page-break-after:always;
+text-align:left; 
+margin-top:100px;
+page-break-after:always; 
 }
  
 /* --- CHECKLIST ITEMS --- */
 .checklist-item{
- border:3px solid #ccc;
- padding:10px 12px;
- margin-bottom:10px;
- border-radius:10px;
- background:#fff;
- display:block;
+border:3px solid #ccc;
+padding:10px 12px;
+margin-bottom:10px;
+border-radius:10px;
+background:#fff; 
+display:block; 
 }
 .checklist-item.ok{border-left:12px solid green;background:#e9f9e9;}
 .checklist-item.ko{border-left:16px solid red;background:#ffecec;}
@@ -59,112 +59,112 @@ label,select,input,textarea{font-size:18px;}
  
 .risposta-box select,
 .data-box input{
- font-size:18px;
- width:100%;
- padding:8px;
- box-sizing:border-box;
- margin-top:5px;
+font-size:18px;
+width:100%;
+padding:8px;
+box-sizing:border-box; 
+margin-top:5px;
 }
 textarea{
- width:100%;
- padding:10px;
- font-size:18px;
- resize:vertical;
- box-sizing:border-box;
+width:100%;
+padding:10px;
+font-size:18px;
+resize:vertical; 
+box-sizing:border-box; 
 }
  
 /* --- FIRME --- */
 .firma-canvas{
- border:1px dashed #666;
- margin-top:6px;
- width:100%;
- height:180px;
- background:#fff;
- touch-action:none;
- display:block;
+border:1px dashed #666;
+margin-top:6px;
+width:100%;
+height:180px;
+background:#fff; 
+touch-action:none; 
+display:block; 
 }
  
 /* --- BOTTONI --- */
 input[type="text"]{
- font-size:18px;
- width:100%;
- padding:8px;
- margin-bottom:10px;
- box-sizing:border-box;
+font-size:18px;
+width:100%;
+padding:8px;
+margin-bottom:10px;
+box-sizing:border-box; 
 }
 .btn{
- padding:16px 28px;
- margin:8px 4px 8px 0;
- background:#007BFF;
- color:#fff;
- border:none;
- cursor:pointer;
- border-radius:6px;
- font-size:18px;
- width:100%;
- max-width:400px;
+padding:16px 28px;
+margin:8px 4px 8px 0;
+background:#007BFF; 
+color:#fff; 
+border:none; 
+cursor:pointer; 
+border-radius:6px;
+font-size:18px;
+width:100%;
+max-width:400px;
 }
 .btn.green{background:#28a745!important;}
 .btn.disabled{opacity:.6;pointer-events:auto;}
  
 @media(min-width:768px){
- .btn{width:auto;}
+.btn{width:auto;} 
 }
  
 /* Riepilogo */
 #riepilogoNegativita{
- margin-top:20px;
- padding:14px;
- border:2px dashed red;
- background:#fff5f5;
- display:none;
+margin-top:20px;
+padding:14px;
+border:2px dashed red;
+background:#fff5f5; 
+display:none; 
 }
 #progressoChecklist{
- margin-top:8px;
- font-weight:600;
+margin-top:8px;
+font-weight:600;
 }
  
 /* Reset notice */
 #resetNotice{
- display:none;
- position:fixed;
- top:12px;
- left:50%;
- transform:translateX(-50%);
- background:#d4edda;
- color:#155724;
- border:1px solid #c3e6cb;
- padding:10px 16px;
- border-radius:8px;
- z-index:9999;
- box-shadow:0 4px 14px rgba(0,0,0,.06);
- font-weight:700;
+display:none; 
+position:fixed; 
+top:12px;
+left:50%;
+transform:translateX(-50%); 
+background:#d4edda; 
+color:#155724; 
+border:1px solid #c3e6cb;
+padding:10px 16px;
+border-radius:8px;
+z-index:9999;
+box-shadow:0 4px 14px rgba(0,0,0,.06);
+font-weight:700;
 }
  
 /* Banner scaduti */
 #scadutiBanner{
- display:none;
- position:fixed;
- top:12px;
- left:50%;
- transform:translateX(-50%);
- background:linear-gradient(90deg,#ffb84d,#ff704d);
- color:#3a1a00;
- border:1px solid #dd6b2f;
- padding:10px 18px;
- border-radius:8px;
- z-index:10000;
- font-weight:800;
- box-shadow:0 6px 18px rgba(0,0,0,.12);
- text-align:center;
+display:none; 
+position:fixed; 
+top:12px;
+left:50%;
+transform:translateX(-50%); 
+background:linear-gradient(90deg,#ffb84d,#ff704d); 
+color:#3a1a00; 
+border:1px solid #dd6b2f;
+padding:10px 18px;
+border-radius:8px;
+z-index:10000;
+font-weight:800;
+box-shadow:0 6px 18px rgba(0,0,0,.12);
+text-align:center; 
 }
 .scaduti-blink{animation:scadutiBlink .5s linear infinite;}
 @keyframes scadutiBlink{
- 0%{opacity:1;transform:translateX(-50%) scale(1);}
- 25%{opacity:.15;transform:translateX(-50%) scale(1.02);}
- 50%{opacity:1;transform:translateX(-50%) scale(1);}
- 75%{opacity:.15;transform:translateX(-50%) scale(1.02);}
- 100%{opacity:1;transform:translateX(-50%) scale(1);}
+0%{opacity:1;transform:translateX(-50%) scale(1);}
+25%{opacity:.15;transform:translateX(-50%) scale(1.02);}
+50%{opacity:1;transform:translateX(-50%) scale(1);}
+75%{opacity:.15;transform:translateX(-50%) scale(1.02);}
+100%{opacity:1;transform:translateX(-50%) scale(1);}
 }
  
 /* stampa */
@@ -175,14 +175,14 @@ input[type="text"]{
  
 /* header */
 header{
- display:flex;
- gap:12px;
- align-items:center;
- margin-bottom:12px;
+display:flex; 
+gap:12px;
+align-items:center; 
+margin-bottom:12px;
 }
 .header-title{
- font-size:18px;
- font-weight:700;
+font-size:18px;
+font-weight:700;
 }
 </style>
 </head>
@@ -193,157 +193,165 @@ header{
  
 <!-- Banner scaduti -->
 <div id="scadutiBanner">
- ⚠️ Attenzione: SONO PRESENTI MATERIALI SANITARI SCADUTI DA SOSTITUIRE!!
+⚠️ Attenzione: SONO PRESENTI MATERIALI SANITARI SCADUTI DA SOSTITUIRE!! 
 </div>
  
 <!-- Copertina -->
 <div class="copertina">
- <h1>CHECKLIST AMBULANZA A-ALS</h1>
- <p><strong>Data/Ora apertura documento:</strong>
-   <span id="dataOraCorrente"></span></p>
+<h1>CHECKLIST AMBULANZA A-BLS</h1>
+<p><strong>Data/Ora apertura documento:</strong>
+  <span id="dataOraCorrente"></span></p>
 </div>
  
 <!-- Header / titolo -->
 <header>
- <img src="" alt="Logo" style="width:70px;display:none;" onerror="this.style.display='none'">
- <div>
-   <div class="header-title">CHECKLIST - MISERICORDIA</div>
-   <div style="font-size:12px;color:#555;">Modulo controlli pre-partenza</div>
- </div>
+<img src="" alt="Logo" style="width:70px;display:none;" onerror="this.style.display='none'">
+<div>
+  <div class="header-title">CHECKLIST - MISERICORDIA</div>
+  <div style="font-size:12px;color:#555;">Modulo controlli pre-partenza</div>
+</div>
 </header>
  
 <!-- SELEZIONE VEICOLO (targa da pagina ponte/QR) -->
 <h2>🚐 VEICOLO RILEVATO/ASSEGNATO</h2>
 <p><strong>📅 Data/Ora apertura:</strong>
- <span id="dataOraCorrente2"></span></p>
+<span id="dataOraCorrente2"></span></p>
  
 <label for="targa">🚐 Veicolo (targa):</label>
 <input
- type="text"
- id="targa"
- style="text-transform:uppercase;"
- readonly
+type="text" 
+id="targa"
+style="text-transform:uppercase;"
+readonly 
 >
  
 <!-- Checklist: dotazioni -->
 <!-- Inizio checklist -->
-<h2>  DOTAZIONI DEL VEICOLO</h2>
+<h2> DOTAZIONI DEL VEICOLO</h2>
  
 <div class="checklist-item">
-<div class="etichetta"> N°1 SISTEMA DI TELEFONIA CELLULARE DEDICATO CON VIVAVOCE VEICOLARE O AURICOLARE</div>
+<div class="etichetta">N°1 SISTEMA DI TELEFONIA CELLULARE DEDICATO CON VIVAVOCE VEICOLARE O AURICOLARE</div>
 <div class="risposta-box"><select onchange="valuta(this)"><option value="">-</option><option>SI</option><option>NO</option></select></div>
-</div>
- 
-<div class="checklist-item">
-<div class="etichetta">  N°1 FARO DI SERVIZIO ESTRAIBILE A LUCE BIANCA</div>
-<div class="risposta-box"><select onchange="valuta(this)"><option value="">-</option><option>SI</option><option>NO</option></select></div>
- 
- 
  
 </div>
 <div class="checklist-item">
-<div class="etichetta"> N°1 TORCIA ELETTRICA DI SEGNALAZIONE A LUCE GIALLA O CONO GIALLO ADATTABILE SU FARO A LUCE BIANCA</div>
+<div class="etichetta"> N°1 FARO DI SERVIZIO ESTRAIBILE DI SERVIZIO A LUCE BIANCA</div>
 <div class="risposta-box">
 <select onchange="valuta(this)">
 <option value="">-</option>
-<option>SI</option>
-<option>NO</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option></select>
+</div>
+</div>
+<div class="checklist-item">
+<div class="etichetta">N°1 TORCIA ELETTRICA DI SEGNALAZIONE A LUCE GIALLA O CONO GIALLO ADATTABILE SU FARO A LUCE BIANCA</div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
 </select>
 </div>
 </div>
 <div class="checklist-item">
-<div class="etichetta"> N°2 ESTINTORI DA ALMENO 2 KG (N°1 VANO GUIDA + N°1 VANO SANITARIO)</div>
+<div class="etichetta">N°2 ESTINTORI DA ALMENO 2 KG (N°1 VANO GUIDA + N°1 VANO SANITARIO)</div>
 <div class="risposta-box">
 <select onchange="valuta(this)">
 <option value="">-</option>
-<option>SI</option>
-<option>NO</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
 </select>
 </div>
 </div>
 <div class="checklist-item">
-<div class="etichetta"> N°1 CATENE DA NEVE</div>
+<div class="etichetta">N°1 CATENE DA NEVE</div>
 <div class="risposta-box">
 <select onchange="valuta(this)">
 <option value="">-</option>
-<option>SI</option>
-<option>NO</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
 </select>
 </div>
 </div>
  
 <!-- Checklist: requisiti allestimento -->
-<h2>  REQUISITI DELL’ALLESTIMENTO</h2>
+<h2> REQUISITI MINIMI DELL’ALLESTIMENTO</h2>
 <div class="checklist-item">
 <div class="etichetta"> N°4 PRESE 12 VOLT + N°4 PRESE 220 VOLT </div>
 <div class="risposta-box">
 <select onchange="valuta(this)">
 <option value="">-</option>
-<option>SI</option>
-<option>NO</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
 </select>
 </div>
 </div>
 <div class="checklist-item">
-<div class="etichetta"> N°1 FARETTO ORIENTABILE </div>
+<div class="etichetta"> N°2 BOMBOLE DI OSSIGENO FISSE CON CAPACITA’ DI LITRI 7 CON N°2 PRESE CON RELATIVO FLUSSIMETRIO + SCAMBIATORE + RIDUTTORE DI PRESSIONE + MANOMETRO PER OGNI SINGOLA BOMBOLA + CONNETTORE AD ALTI FLUSSI PER C-PAP </div>
 <div class="risposta-box">
 <select onchange="valuta(this)">
 <option value="">-</option>
-<option>SI</option>
-<option>NO</option>
-</select>
-</div>
- 
-</div>
-<div class="checklist-item">
-<div class="etichetta"> N°2 BOMBOLE DI OSSIGENO FISSE CAPACITA’ DI LITRI 7 CON N°2 PRESE CON RELATIVO FLUSSIMETRIO + SCAMBIATORE + RIDUTTORE DI PRESSIONE + MANOMETRO PER OGNI SINGOLA BOMBOLA + CONNETTORE AD ALTI FLUSSI PER C-PAP </div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option>SI</option>
-<option>NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta"> - ASPIRATORE FISSO DOTATO DI PRESA VUOTO + CONTENITORE RACCOLTA SECRETI DA 500 ML + PROLUNGA + RACCORDO </div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option>SI</option>
-<option>NO</option>
-</select>
-</div>
- 
-</div>
-<div class="checklist-item">
-<div class="etichetta"> N°1 SFIGMOMANOMETRO FISSO + FONOENDOSCOPIO </div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option>SI</option>
-<option>NO</option>
-</select>
-</div>
- 
- 
-</div>
-<div class="checklist-item">
-<div class="etichetta"> N°2 ATTACCHI PORTAFLEBO ANTIURTO E ANTIOSCILLAZIONE </div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option>SI</option>
-<option>NO</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
 </select>
 </div></div>
 <div class="checklist-item">
-<div class="etichetta"> SISTEMI DI FISSAGGIO PER ALLOGGIAMENTO E CONNESSIONE DI: MONITOR-DEFIBRILLATORE, VENTILATORE POLMONARE, ASPIRATORE MEDICO-CHIRURGICO, POMPA INFUSIONE </div>
+<div class="etichetta"> - ASPIRATORE FISSO DOTATO DI PRESA A VUOTO + CONTENITORE RACCOLTA SECRETI DA 500ML + PROLUNGA + RACCORDO </div>
 <div class="risposta-box">
 <select onchange="valuta(this)">
 <option value="">-</option>
-<option>SI</option>
-<option>NO</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+</div>
+<div class="checklist-item">
+<div class="etichetta"> - SISTEMI DI FISSAGGIO PER ALLOGGIAMENTO E CONNESSIONE DI: MONITOR-DEFIBRILLATORE, VENTILATORE POLMONARE, ASPIRATORE MEDICO CHIRURGICO, POMPA INFUSIONE </div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N°1 SFIGMOMANOMETRO FISSO + FONENDOSCOPIO </div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N°2 ATTACCHI PORTAFLEBO ANTI URTO E ANTI OSCILLAZIONE </div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N°1 PORTA RIFIUTI ESTRAIBILE </div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N°1 MINIFRIGO PER FARMACI </div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
 </select>
 </div>
 </div>
@@ -352,8 +360,8 @@ header{
 <div class="risposta-box">
 <select onchange="valuta(this)">
 <option value="">-</option>
-<option>SI</option>
-<option>NO</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
 </select>
 </div>
 </div>
@@ -362,121 +370,127 @@ header{
 <div class="risposta-box">
 <select onchange="valuta(this)">
 <option value="">-</option>
-<option>SI</option>
-<option>NO</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
 </select>
 </div>
+ 
 </div>
-<!-- Checklist: materiale di assistenza -->
-<h2>  REQUISITI MINIMI DELLE TECNOLOGIE BIOMEDICHE</h2>
+ 
+<!-- Checklist: zaino di soccorso -->
+<h2> MATERIALE ASSISTENZA</h2>
 <div class="checklist-item">
-<div class="etichetta"> - MONITOR DEFIBRILLATORE DOTATO DI ACQUISIZIONE ECG A 12 DERIVAZIONI, FUNZIONE DI PACING, DEFIBRILLAZIONE IN MODALITA’ MANUALE E SEMIAUTOMATICA, POSSIBILITA’ DI STAMPA </div>
+<div class="etichetta"> N°2 BOMBOLE OSSIGENO PORTATILI CON RIDUTTORE DI PRESSIONE + MANOMETRO </div>
 <div class="risposta-box">
 <select onchange="valuta(this)">
 <option value="">-</option>
-<option>SI</option>
-<option>NO</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+ 
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N°1 DEFIBRILLATORE SEMIAUTOMATICO </div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+ 
+ 
+</div>
+<div class="checklist-item">
+<div class="etichetta"> - ASIRATORE MEDICO-CHIRURGICO ELETTRICO PORTATILE CON CONTENITORE DI RACCOLTA SECRETI MONOUSO DA ALMENO 500ML + PROLUNGA + RACCORDO </div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+ 
+</div>
+<div class="checklist-item">
+<div class="etichetta"> - PALLONE AMBU ADULTI + PEDIATRICO + NEONATALE CON RESERVOIR N.1 PER MISURA + N°3 FILTRI ANTIBATTERICI </div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
 </select>
 </div>
  
 </div>
 <div class="checklist-item">
-<div class="etichetta">  N°1 DEFIBRILLATORE SEMIAUTOMATICO </div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option>SI</option>
-<option>NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta"> N°1 ASPIRATORE MEDICO-CHIRURGICO ELETTRICO PORTATILE, CON CONTENITORE DI RACCOLTA SECRETI MONOUSO DA ALMENO 500 ML + PROLUNGA + RACCORDO </div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option>SI</option>
-<option>NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta"> - VENTILATORE POLMONARE PORTATILE + CIRCUITO ESTERNO </div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option>SI</option>
-<option>NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta">  N°1 POMPA SIRINGA DA INFUSIONE PORTATILE </div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option>SI</option>
-<option>NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta">  N°1 MINIFRIGO PER FARMACI </div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option>SI</option>
-<option>NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta">  N°1 BORSA SCALDAFLUIDI O VANO SCALDAFLUIDI A TEMPERATURA CONTROLLATA </div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option>SI</option>
-<option>NO</option>
-</select>
-</div>
-</div>
-<!-- Checklist: materiale di assistenza -->
-<h2>  MATERIALE ASSISTENZA RESPIRATORIA – VIE AEREE </h2>
-<div class="checklist-item">
-<div class="etichetta"> N° 2 BOMBOLE D’OSSIGENO PORTATILI DA ALMENO 2 LITRI CON MANOMETRO E RIDUTTORE DI PRESSIONE + CONNETTORE AD ALTI FLUSSI PER C-PAP </div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option>SI</option>
-<option>NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta">  N°1 PALLONE AMBU ADULTI CON RESERVOIR + N°1 PALLONE AMBU PEDIATRICO CON RESERVOIR + N°1 PALLONE AMBU NEONATALE CON RESERVOIR + N°1 PALLONE AMBU NEONATALE CON RESERVOIR + N°3 FILTRI ANTIBATTERICI </div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option>SI</option>
-<option>NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
- 
 <div class="etichetta"> - MASCHERE PER PALLONE AMBU MISURE DA 0 A 5 N°1 PER MISURA </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
+ 
 <div class="risposta-box">
 <select onchange="valuta(this)">
 <option value="">-</option>
-<option>SI</option>
-<option>NO</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
 </select>
 </div>
 </div>
 <div class="checklist-item">
-<div class="etichetta"> - CANNULE OROFARINGEE MISURE DA 000 A 5°1 PER MISURA </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="etichetta"> - CANNULE OROFARINGEE MISURE DA 000 A 5 N°1 PER MISURA </div>
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
+ 
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N.2 MASCHERE OSSIGENO ADULTI CON RESEVOIR </div>
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
+ 
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N.2 MASCHERE OSSIGENO PEDIATRICHE CON RESEVOIR </div>
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
+ 
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N.1 MASCHERA VENTURI ADULTE </div>
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
+ 
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N.1 MASCHERA VENTURI PEDIATRICHE </div>
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
+ 
 <div class="risposta-box">
 <select onchange="valuta(this)">
 <option value="">-</option>
@@ -487,19 +501,9 @@ header{
  
 </div>
 <div class="checklist-item">
-<div class="etichetta">  N°1 LARINGOSCOPIO A LED CON LAME DI MISURE ADULTI E PEDIATRICHE CON RICAMBIO BATTERIE </div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option>SI</option>
-<option>NO</option>
-</select>
-</div>
+<div class="etichetta"> N.2 OCCHIALI OSSIGENO</div>
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
  
-</div>
-<div class="checklist-item">
-<div class="etichetta"> - TUBI ENDOTRACHEALI DA 2 A 8,5 N°1 PER MISURA </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
 <div class="risposta-box">
 <select onchange="valuta(this)">
 <option value="">-</option>
@@ -509,188 +513,9 @@ header{
 </div>
 </div>
 <div class="checklist-item">
-<div class="etichetta"> -MANDRINO GUIDATUBO ADULTO + PEDIATRICO N°1+1 </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta"> N°2 CATETERE DI MOUNT </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta"> - PALLONE VA E VIENI ADULTO + PEDIATRICO N°2+2 </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta"> N°2 MASCHERE PER OSSIGENO ADULTI CON RESERVOIR + N°2 MASCHERE PER OSSIGENO PEDIATRICHE CON RESERVOIR </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta"> N°1 MASCHERA VENTURI ADULTA + N°MASCHERA VENTURI PEDIATRICA </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta"> - SET PRESIDI SOVRAGLOTTICI PER ADULTI </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta"> N° 1 DISPOSITIVO PER SOMMINISTRAZIONE FARMACI AEREOSOL </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta"> N°1 SISTEMA DI VENTILAZIONE PER C-PAP </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta"> N°2 OCCHIALINI PER OSSIGENO </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta"> N°2 PROLUNGHE PER OSSIGENO </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta"> - SONDINI PER ASPIRAZIONE MISURE DA 6 A 18 (N°2 PER MISURA) </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
+<div class="etichetta"> N.2 PROLUNGHE OSSIGENO </div>
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
  
-</div>
-<!-- Checklist: materiale di assistenza -->
-<h2>  MATERIALE DI PROTEZIONE </h2>
-<div class="checklist-item">
-<div class="etichetta">  - SCATOLE DI GUANTI MONOUSO TAGLI S/M/L/XL </div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option>SI</option>
-<option>NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
- 
-<div class="etichetta"> N°1 SCATOLA DI MASCHERE CHIRURGICHE + N°3 MASCHERE FFP3D</div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="data-box"></div>
-<div class="etichetta"> N°3 OCCHIALINI DI PROTEZIONE O N°3 VISIERE DI PROTEZIONE </div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
- 
-</div>
-<div class="checklist-item">
-<div class="etichetta"> N°3 CAMCI DI PROTEZIONE MONOUSO + N°3 TUTE DI PROTEZIONE MONOUSO </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="data-box"></div>
-<div class="etichetta"> N°1 AGO BOX </div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="data-box"></div>
-<div class="etichetta"> N°3 CASCHI DI PROTEZIONE </div>
 <div class="risposta-box">
 <select onchange="valuta(this)">
 <option value="">-</option>
@@ -702,7 +527,7 @@ header{
 </div>
 <div class="checklist-item">
 <div class="data-box"></div>
-<div class="etichetta"> N°3 PAIA DI GUANTI DA LAVORO </div>
+<div class="etichetta"> - SONDINI DI ASPIRAZIONE MISURE DA 6 A 18 N_2 PER MISURA</div>
 <div class="risposta-box">
 <select onchange="valuta(this)">
 <option value="">-</option>
@@ -710,38 +535,12 @@ header{
 <option value="NO">NO</option>
 </select>
 </div>
- 
- 
 </div>
  
 <!-- Checklist: Materiale immobilizzazione -->
-<h2>  MATERIALE SPECIALE</h2>
+<h2> MATERIALE IMMOBILIZZAZIONE</h2>
 <div class="checklist-item">
-<div class="etichetta"> N°1 FORBICI ROBIN O SIMILARI </div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option>SI</option>
-<option>NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="data-box"></div>
-<div class="etichetta"> N°2 FIACCOLE DI SEGNALAZIONE IN CERA + N°1 ACCENDINO </div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
- 
-</div>
-<div class="checklist-item">
- 
-<div class="etichetta"> N°2 FUMOGENI</div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="etichetta"> N°1 TELO BARELLA CON ALMENO 6 MANIGLIE</div>
 <div class="risposta-box">
 <select onchange="valuta(this)">
 <option value="">-</option>
@@ -753,246 +552,19 @@ header{
 </div>
 <div class="checklist-item">
 <div class="data-box"></div>
-<div class="etichetta"> - SET DA SCASSO: PIEDE DI PORCO + CORDA + MARTELLO + TRONCHESI + ASCIA + GUANTI ANTI TAGLIO E CALORE</div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
- 
-</div>
- 
-<!-- Checklist: Materiale vario -->
-<h2>  MATERIALE VARIO</h2>
-<div class="checklist-item">
-<div class="etichetta"> N°1 PORTA RIFIUTI ESTRAIBILE + N°2 SACCHETTI PER RIFIUTI </div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option>SI</option>
-<option>NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="data-box"></div>
-<div class="etichetta"> N°1 PADELLA ESTRAIBILE + N°1 PAPPAGALLO MONOUSO </div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
- 
-</div>
-<div class="checklist-item">
- 
-<div class="etichetta"> N°4 CONFEZIONI DI GHIACCIO ISTANTANEO</div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
- 
-</div>
-<div class="checklist-item">
- 
-<div class="etichetta"> N°3 CONFEZIONI DI CALDO ISTANTANEO</div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
- 
- 
-</div>
-<div class="checklist-item">
-<div class="data-box"></div>
-<div class="etichetta"> N°2 SACCHETTI GRADUATI PER RACCOLTA LIQUIDI ORGANICI </div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
- 
-</div>
-<div class="checklist-item">
-<div class="data-box"></div>
-<div class="etichetta"> N°4 LENZUOLA + N°2 COPERTE </div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div></div>
-<div class="checklist-item">
-<div class="data-box"></div>
-<div class="etichetta"> N°2 TRAVERSE ASSORBENTI MONOUSO </div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div></div>
-<div class="checklist-item">
-<div class="data-box"></div>
-<div class="etichetta"> N°2 TELI TERMICI </div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
- 
-<div class="etichetta"> N°2 LUBRIFICANTI MONODOSE </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div></div>
-<div class="checklist-item">
- 
-<div class="etichetta"> N°2 SONDINI NASOGRASTRICI</div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div></div>
-<div class="checklist-item">
- 
-<div class="etichetta"> - CATETERI VESCICALI N°14/16/18 (N°1 PER MISURA)</div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="data-box"></div>
-<div class="etichetta"> N°1 TERMOMETO SENZA CONTATTO</div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
- 
-<!-- Checklist: Materiale Assistenza cardiocircolatoria -->
-<h2>  MATERIALE ASSISTENZA CARDIOCIRCOLATORIA</h2>
-<div class="checklist-item">
-<div class="etichetta"> N°2 LACCI EMOSTATICI DA PRELIEVO </div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option>SI</option>
-<option>NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
- 
-<div class="etichetta"> N°2 TAMPONCINI PER DISINFEZIONE </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
- 
-<div class="etichetta"> N°3 AGHI CANNULE PER MISURA DAL 14 AL 22</div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
- 
-<div class="etichetta"> -SIRINGNE 2,5/5/10/20 ML + SIRINGHE INSULINA N°3 PER MISURA</div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
- 
-</div>
-<div class="checklist-item">
-<div class="data-box"></div>
-<div class="etichetta"> N°1 PREMISACCA</div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
- 
-</div>
-<div class="checklist-item">
-<div class="data-box"></div>
-<div class="etichetta"> N°2 TORNIQUET PER EMOSTASI</div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
- 
-</div>
- 
-<!-- Checklist: Materiale per immobilizzazione -->
-<h2>  MATERIALE PER IMMOBILIZZAZIONE </h2>
-<div class="checklist-item">
 <div class="etichetta"> N°1 KIT COLLARINI DA ESTRICAZIONE </div>
 <div class="risposta-box">
 <select onchange="valuta(this)">
 <option value="">-</option>
-<option>SI</option>
-<option>NO</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
 </select>
 </div>
+ 
 </div>
 <div class="checklist-item">
 <div class="data-box"></div>
-<div class="etichetta"> N°1 ESTRINSECATORE KED (KENDRICK EXTRICATION DEVICE) </div>
+<div class="etichetta"> N°1 ESTRINSECATORE KED (KENDRICK EXTRICATION DEVICE)</div>
 <div class="risposta-box">
 <select onchange="valuta(this)">
 <option value="">-</option>
@@ -1004,7 +576,7 @@ header{
 </div>
 <div class="checklist-item">
 <div class="data-box"></div>
-<div class="etichetta"> N°1 BARELLA ATRAUMATICA A CUCCHIAIO + FERMACAPO + CINTURE</div>
+<div class="etichetta"> N°1 BARELLA ATRAUMATICA A CUCCHIAIO + FERMACAPO + CINTURE </div>
 <div class="risposta-box">
 <select onchange="valuta(this)">
 <option value="">-</option>
@@ -1012,7 +584,6 @@ header{
 <option value="NO">NO</option>
 </select>
 </div>
- 
  
 </div>
 <div class="checklist-item">
@@ -1036,40 +607,49 @@ header{
 <option value="SI">SI</option>
 <option value="NO">NO</option>
 </select>
-</div></div>
+</div>
+</div>
 <div class="checklist-item">
 <div class="data-box"></div>
-<div class="etichetta"> N°1 TAVOLA SIANLE PEDIATRICA + RAGNO + FERMACAPO </div>
+<div class="etichetta"> N°1 TAVOLA SPINALE PEDIATRICA + RAGNO + FERMACAPO</div>
 <div class="risposta-box">
 <select onchange="valuta(this)">
 <option value="">-</option>
 <option value="SI">SI</option>
 <option value="NO">NO</option>
 </select>
-</div></div>
+</div>
+ 
+ 
+</div>
 <div class="checklist-item">
 <div class="data-box"></div>
-<div class="etichetta"> N°1 MATERASSINO A DEPRESSIONE + POMPA </div>
+<div class="etichetta"> N°1 MATERASSINO A DEPRESSIONE + POMPA</div>
 <div class="risposta-box">
 <select onchange="valuta(this)">
 <option value="">-</option>
 <option value="SI">SI</option>
 <option value="NO">NO</option>
 </select>
-</div></div>
+</div>
+</div>
+ 
+<!-- Checklist: Materiale di protezione -->
+<h2> MATERIALE DI PROTEZIONE</h2>
 <div class="checklist-item">
-<div class="data-box"></div>
-<div class="etichetta"> N°1 CINTURA DI IMMOBILIZZAZIONE PELVICA  </div>
+<div class="etichetta"> GUANTI MONOUSO S-M-L-XL N°1 SCATOLA PER MISURA (VANO SANITARIO) + N°1 SCATOLA PER MISURA TAGLIE M-L-XL (VANO GUIDA)</div>
 <div class="risposta-box">
 <select onchange="valuta(this)">
 <option value="">-</option>
 <option value="SI">SI</option>
 <option value="NO">NO</option>
 </select>
-</div></div>
+</div>
+</div>
 <div class="checklist-item">
-<div class="data-box"></div>
-<div class="etichetta"> N°1 TELO BARELLA CON ALMENO 6 MANIGLIE </div>
+<div class="etichetta"> N°1 SCATOLA DI MASCHERINE CHIRURGICHE + N°3 MASCHERINE FFP3D</div>
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
+ 
 <div class="risposta-box">
 <select onchange="valuta(this)">
 <option value="">-</option>
@@ -1079,24 +659,83 @@ header{
 </div>
  
 </div>
- 
-<!-- Checklist: Materiale per medicazione  -->
-<h2>  MATERIALE PER MEDICAZIONE</h2>
 <div class="checklist-item">
-<div class="etichetta"> - GUANTI STERILI MISURE S/M/L/XL</div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="data-box"></div>
+<div class="etichetta"> N°1 AGO BOX/OGGETTI TAGLIENTI UTILIZZATI</div>
 <div class="risposta-box">
 <select onchange="valuta(this)">
 <option value="">-</option>
-<option>SI</option>
-<option>NO</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="data-box"></div>
+<div class="etichetta"> N°3 VISIERE o N°3 OCCHIALI DI PROTEZIONE </div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="data-box"></div>
+<div class="etichetta"> N°2 SACCHETTI PER RIFIUTI </div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N°3 CAMICI DI PROTEZIONE MONOUSO E N°3 TUTE DI PROTEZIONE MONOUSO CON CAPPUCCIO</div>
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="data-box"></div>
+<div class="etichetta"> N°3 CASCHI DI PROTEZIONE </div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="data-box"></div>
+<div class="etichetta"> N°3 PAIA DI GUANTI DA LAVORO</div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
 </select>
 </div>
 </div>
-<div class="checklist-item">
  
+<!-- Checklist: Materiale per medicazione e vario -->
+<h2> MATERIALE PER MEDICAZIONE E VARIO</h2>
+<div class="checklist-item">
 <div class="etichetta"> N°3 CONFEZIONI DI GARZE STERILI</div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
 <div class="risposta-box">
 <select onchange="valuta(this)">
 <option value="">-</option>
@@ -1107,7 +746,7 @@ header{
 </div>
 <div class="checklist-item">
 <div class="etichetta"> N°2 TELINI STERILI</div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
 <div class="risposta-box">
 <select onchange="valuta(this)">
 <option value="">-</option>
@@ -1115,6 +754,8 @@ header{
 <option value="NO">NO</option>
 </select>
 </div>
+ 
+ 
 </div>
 <div class="checklist-item">
 <div class="data-box"></div>
@@ -1129,9 +770,9 @@ header{
  
 </div>
 <div class="checklist-item">
- 
 <div class="etichetta"> N°2 FLACONI DI ACQUA OSSIGENATA</div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
+ 
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
 <div class="risposta-box">
 <select onchange="valuta(this)">
 <option value="">-</option>
@@ -1139,10 +780,11 @@ header{
 <option value="NO">NO</option>
 </select>
 </div>
+ 
 </div>
 <div class="checklist-item">
 <div class="etichetta"> N°1 FLACONE DI DISINFETTANTE IODATO</div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
 <div class="risposta-box">
 <select onchange="valuta(this)">
 <option value="">-</option>
@@ -1162,456 +804,187 @@ header{
 <option value="NO">NO</option>
 </select>
 </div>
-</div>
-<div class="checklist-item">
-<div class="etichetta">  N°2 CEROTTI 5x7 + N°2 CEROTTI 10x8 + N°2 CEROTTI 15x10</div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta">  N°2 ROTOLI DI BENDE PER FASCIATURA </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta">  - FLACONE DI ACQUA FISIOLOGICA 100/250/500 ML (N°2 FLACONE X MISURA)</div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
- 
-<!-- Checklist: Materiale zaino d’emergenza  -->
-<h2>  MATERIALE ZAINO DI EMERGENZA</h2>
-<div class="checklist-item">
-<div class="etichetta"> N°3 CONFEZIONI DI GRAZE STERILI</div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option>SI</option>
-<option>NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
- 
-<div class="etichetta"> N°2 TELINI STERILI</div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
- 
- 
-</div>
-<div class="checklist-item">
- 
-<div class="etichetta"> N°2 FLACONI DI ACQUA OSSIGENATA</div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta"> N°1 FLACONE DI DISINFETTANTE IODATO</div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
  
 </div>
 <div class="checklist-item">
 <div class="etichetta">  N°2 CEROTTI 5x7 + N°2 CEROTTI 10x8 + N°2 CEROTTI 15x10</div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
 <div class="risposta-box">
 <select onchange="valuta(this)">
 <option value="">-</option>
 <option value="SI">SI</option>
 <option value="NO">NO</option>
 </select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta">  N°2 ROTOLI DI BENDE PER FASCIATURA </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="data-box"></div>
-<div class="etichetta"> N°1 FORBICI ROBIN O SIMILARI</div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="data-box"></div>
-<div class="etichetta"> N°1 AGO BOX</div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="data-box"></div>
-<div class="etichetta"> N°1 PALLONE AMBU ADULTI CON RESERVOIR + FILTRO ANTIBATTERICO</div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="data-box"></div>
-<div class="etichetta"> N°1 PALLONE AMBU PEDIATRICO CON RESERVOIR + FILTRO ANTIBATTERICO</div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta"> -MASCHERE PER PALLONE AMBU MISURE DA 0 A 5 (N°1 PER MISURA) </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta">  - DISPOSITIVO PER SOMMINISTRAZIONE FARMACI AEREOSOL </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta">  N°2 DISPOSITIVI PER SOMMINISTRAZIONE FARMICI VIA INTRANASALE </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta"> - CANNULE OROFARINGEE MISURE DA 000 A 5 (N°1 PER MISURA) </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta">  N°2 CANNULE NASOFARINGEE DI MISURE DIVERSE </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta">  N°1 OCCHIALINI PER OSSIGENO </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta">  N°1 PROLUNGA PER OSSIGENO </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta">  - SONDINI PER ASèIRAZIONE MISURE DA 6 A 18 (N°1 PER MISURE) </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta">  N°1 CANNULA YANKAUER </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta">  N°1 LUBRIFICANTE MONODOSE </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="data-box"></div>
-<div class="etichetta"> - LARINGOSCOPIO A  LED CON LAME DI MISURE ADULTI E PEDIATRICHE CON RICAMBIO BATTERIE</div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta">  - TUBI ENDOTRACHEALI DA 2 A 8,5 (N°1 PER MISURA) </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta">  - MANDRINO GUIDATUBO ADULTO + PEDIATRICO N°1 +1 </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta">  N°1 CATETERE DI MOUNT </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta">  - PALLONE VA E VIENI ADULTO + PEDIATRICO n°1 +1 </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta">  N°1 MASCHERE PER OSSIGENO ADULTI CON RESERVOIR + N 1 MASCHERE  PER OSSIGENO PEDIATRICHE CON RESERVOIR </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta">  N° 1 MASCHERA VENTURI ADULTA + N°1 MASCHERA VENTURI PEDIATRICA </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta">  - SET PRESIDI SOVRAGLOTTICI ADULTI </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="data-box"></div>
-<div class="etichetta"> N°2 LACCI EMOSTATICI DA PRELIEVO </div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta">  - AGHI CANNULA MISURE DAL 14 AL 22 (N°2 PER MISURA) </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="data-box"></div>
-<div class="etichetta"> N°1 SPREMISACA </div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="data-box"></div>
-<div class="etichetta"> N°1 TOURNIQUET PER EMOSTASI </div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta">  N°4 CONFEZIONI DI GHIACCIO ISTANTANEO </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="etichetta">  N°2 CONFEZIONI DI CALDO ISTANTANEO </div>
-<div class="data-box">  <input type="date" class="scad-date" onchange="verifica(this)"></div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="data-box"></div>
-<div class="etichetta"> N°2 SACCHETTI PER RIFIUTI </div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
-</div>
-<div class="checklist-item">
-<div class="data-box"></div>
-<div class="etichetta"> N°2 TELI TERMICI </div>
-<div class="risposta-box">
-<select onchange="valuta(this)">
-<option value="">-</option>
-<option value="SI">SI</option>
-<option value="NO">NO</option>
-</select>
-</div>
 </div>
  
-<!-- Checklist: Materiale zaino diagnostica  -->
-<h2>  MATERIALE ZAINO DIAGNOSTICA</h2>
+</div>
 <div class="checklist-item">
-<div class="etichetta"> N°1 SATURIMETRO PORTATILE </div>
+<div class="etichetta"> N°2 ROTOLI DI BENDE PER FASCIATURA</div>
+ 
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
 <div class="risposta-box">
 <select onchange="valuta(this)">
 <option value="">-</option>
-<option>SI</option>
-<option>NO</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
 </select>
 </div>
+ 
+</div>
+<div class="checklist-item">
+<div class="etichetta"> - FLACONI DI ACQUA FISIOLOGICA 500/250/100 ML N°1 PER MISURA</div>
+ 
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
+ 
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+ 
+</div>
+<div class="checklist-item">
+<div class="etichetta"> - SIRINGHE 2,5/5/10/20 ML + SIRINGHE MODELLO INSULINA N°2 PER MISURA </div>
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="data-box"></div>
+<div class="etichetta"> N°2 TOURNIQUET PER EMOSTASI</div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="data-box"></div>
+<div class="etichetta"> N°1 BORSA SCALDA FLUIDI</div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="data-box"></div>
+<div class="etichetta"> N°1 PAPPAGALLO MONOUSO + N°1 PADELLA</div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N°3 CONFEZIONI DI GHIACCIO ISTANTANEO</div>
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N°3 CONFEZIONI DI CALDO ISTANTANEO</div>
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N°4 TAMPONCINI PER DISINFEZIONE</div>
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="data-box"></div>
+<div class="etichetta"> N°2 COPERTE + N°4 LENZUOLA</div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="data-box"></div>
+<div class="etichetta"> N°2 TRAVERSE ASSORBENTI MONOUSO</div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="data-box"></div>
+<div class="etichetta"> N°2 TELI TERMICI</div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N°1 LUBRIFICANTE MONODOSE</div>
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 </div>
 <div class="checklist-item">
 <div class="data-box"></div>
@@ -1624,9 +997,282 @@ header{
 </select>
 </div>
 </div>
+ 
+<!-- Checklist: Materiale per medicazione e vario -->
+<h2> MATERIALE ZAINO DI EMERGENZA </h2>
+<div class="checklist-item">
+<div class="etichetta"> N°3 CONFEZIONI DI GARZE STERILI</div>
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N°2 TELINI STERILI</div>
+ 
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
 <div class="checklist-item">
 <div class="data-box"></div>
-<div class="etichetta"> N°1 RILEVATORE DI MONOSSIDO DI CARBONIO </div>
+<div class="etichetta"> - GARZE NON STERILI VARIE</div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N°2 FLACONI DI ACQUA OSSIGENATA</div>
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N°1 FLACONE DI DISINFETTANTE IODATO </div>
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
+ 
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="etichetta">  N°2 CEROTTI 5x7 + N°2 CEROTTI 10x8 + N°2 CEROTTI 15x10</div>
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N°2 ROTOLI DI BENDE PER FASCIATURA</div>
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="data-box"></div>
+<div class="etichetta"> N°1 FORBICI ROBIN O SIMILARE</div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="data-box"></div>
+<div class="etichetta"> N°1 AGO BOX/OGGETTI TAGLIENTI UTILIZZATI</div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="data-box"></div>
+<div class="etichetta"> - PALLONE AMBU ADULTI + PEDIATRICO CON RESERVOIR N.1 PER MISURA + N°2 FILTRI ANTIBATTERICI</div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="etichetta"> - MASCHERE PER PALLONE AMBU MISURE DA 0 A 5  N°1 PER MISURA</div>
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="etichetta"> - CANNULE OROFARINGEE MISURE DA 000 A 5 N°1 PER MISURA </div>
+ 
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N°2 CANNULE NASOFARINGEE DI MISURE DIVERSE</div>
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N°1 OCCHIALINI PER OSSIGENO</div>
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N°1 PROLUNGA PER OSSIGENO</div>
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N°1 MASCHERA OSSIGENO ADULTI CON RESERVOIR</div>
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N°1 MASCHERA OSSIGENO PEDIATRICA CON RESERVOIR</div>
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="data-box"></div>
+<div class="etichetta"> N°1 TOURNIQUET PER EMOSTASI</div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N°4 CONFEZIONI DI GHIACCIO ISTANTANEO</div>
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="etichetta"> N°2 CONFEZIONI DI CALDO ISTANTANEO </div>
+<div class="data-box"> <input type="date" class="scad-date" onchange="verifica(this)"></div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="data-box"></div>
+<div class="etichetta"> N°2 SACCHETTI PER RIFIUTI</div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="data-box"></div>
+<div class="etichetta"> N°2 TELI TERMICI</div>
 <div class="risposta-box">
 <select onchange="valuta(this)">
 <option value="">-</option>
@@ -1637,7 +1283,7 @@ header{
 </div>
 <div class="checklist-item">
 <div class="data-box"></div>
-<div class="etichetta"> N°1 SFIGMOMANOMETRO MANUALE + N°1 FONENDOSCOPIO </div>
+<div class="etichetta"> N°1 CANNULA YANKAUER </div>
 <div class="risposta-box">
 <select onchange="valuta(this)">
 <option value="">-</option>
@@ -1645,6 +1291,44 @@ header{
 <option value="NO">NO</option>
 </select>
 </div>
+ 
+</div>
+ 
+<!-- Checklist: Materiale zaino di diagnostica -->
+<h2> MATERIALE ZAINO DI DIAGNOSTICA</h2>
+<div class="checklist-item">
+<div class="etichetta"> N°1 TERMOMETRO SENZA CONTATTO </div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option>SI</option>
+<option>NO</option>
+</select>
+</div>
+</div>
+<div class="checklist-item">
+<div class="data-box"></div>
+<div class="etichetta"> N°1 SATURIMETRO PORTATILE</div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="data-box"></div>
+<div class="etichetta"> N°1 SFIGMOMANOMETRO MANUALE +N°1 FONENDOSCOPIO</div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
 </div>
 <div class="checklist-item">
 <div class="data-box"></div>
@@ -1658,6 +1342,65 @@ header{
 </div>
  
 </div>
+<div class="checklist-item">
+<div class="data-box"></div>
+<div class="etichetta"> N°1 RILEVATORE DI MONOSSIDO DI CARBONIO</div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+</div>
+ 
+<!-- Checklist: Materiale speciale -->
+<h2> MATERIALE SPECIALE</h2>
+<div class="checklist-item">
+<div class="etichetta"> N°2 FIACCOLE DI SEGNALAZIONE + N°1 ACCENDINO</div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option>SI</option>
+<option>NO</option>
+</select>
+</div>
+</div>
+<div class="checklist-item">
+<div class="data-box"></div>
+<div class="etichetta"> N°2 FUMOGENI</div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="data-box"></div>
+<div class="etichetta"> N°1 SET DA SOCCORSO: PIEDE DI PORCO + CORDA + MARTELLO + TRONCHESI + ASCIA + GUANTI ANTI TAGLIO E CALORE</div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+ 
+</div>
+<div class="checklist-item">
+<div class="data-box"></div>
+<div class="etichetta"> N°1 FORBICI ROBIN O SIMILARI</div>
+<div class="risposta-box">
+<select onchange="valuta(this)">
+<option value="">-</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</div>
+</div>
  
 <h3 id="progressoChecklist">Completamento: 0%</h3>
  
@@ -1667,10 +1410,10 @@ header{
 <h2>🧍‍♂️ COMPILATORI e FIRME</h2>
 <label for="numeroCompilatori">Numero di compilatori:</label>
 <select id="numeroCompilatori" onchange="mostraCompilatori()">
- <option value="1">1</option>
- <option value="2">2</option>
- <option value="3">3</option>
- <option value="4">4</option>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
 </select>
  
 <div id="compilatoriBox"></div>
@@ -1684,10 +1427,10 @@ header{
  
 <!-- PULSANTI -->
 <div style="margin-top:30px;">
- <button id="btnRiepilogo" class="btn no-print"
-   style="background:#ff4444;" onclick="mostraNegativi()">
-   🔴 PREMI QUI QUANDO IL PULSANTE _CREA PDF PER ANALISI NON E’ VERDE
- </button>
+<button id="btnRiepilogo" class="btn no-print"
+  style="background:#ff4444;" onclick="mostraNegativi()">
+  🔴 PREMI QUI QUANDO IL PULSANTE _CREA PDF PER ANALISI NON E’ VERDE
+</button>
  <!-- GIALLO: solo crea/scarica PDF sul dispositivo --> 
  <button id="btnAnteprima" class="btn no-print"
    style="background:#ffc107;" onclick="anteprimaCondivisionePDF()">
@@ -2040,7 +1783,7 @@ function resetChecklist(){
   FILENAME PDF
 ============================ */
 function filenameWithTarga(){
- const titolo = 'Checklist_Ambulanza A-ALS';
+ const titolo = 'Checklist_Ambulanza A-BLS';
  const targaRaw = (document.getElementById('targa')?.value || 'NON_TARGA');
  const targa = String(targaRaw).trim().replace(/\s+/g,'_').replace(/[^A-Za-z0-9_\-]/g,'');
  const now = new Date();
@@ -2133,7 +1876,7 @@ async function anteprimaCondivisionePDF(){
  const dataStr = now.toLocaleDateString('it-IT')+' '+now.toTimeString().slice(0,5);
  const info = document.createElement('div');
  info.style = 'font-weight:bold;margin-bottom:12px;';
- info.textContent = `Checklist: Ambulanza A-ALS — Veicolo: ${veicolo} — Data compilazione: ${dataStr}`;
+ info.textContent = `Checklist: Ambulanza A-BLS — Veicolo: ${veicolo} — Data compilazione: ${dataStr}`;
  const firstH2 = bodyCopy.querySelector('h2');
  if(firstH2 && firstH2.parentNode) firstH2.parentNode.insertBefore(info,firstH2);
  
@@ -2325,7 +2068,7 @@ const now = new Date();
 const dataStr = now.toLocaleDateString('it-IT')+' '+now.toTimeString().slice(0,5); 
 const info = document.createElement('div'); 
 info.style = 'font-weight:bold;margin-bottom:12px;'; 
-info.textContent = ` Checklist: Ambulanza A-ALS — Veicolo: ${veicolo} — Data compilazione: ${dataStr}`; 
+info.textContent = ` Checklist: Ambulanza A-BLS — Veicolo: ${veicolo} — Data compilazione: ${dataStr}`; 
 const firstH2 = bodyCopy.querySelector('h2'); 
 if(firstH2 && firstH2.parentNode) firstH2.parentNode.insertBefore(info,firstH2); 
  
@@ -2456,7 +2199,7 @@ async function inviaChecklistViaMail(){
  /* ===============================
     3️⃣ DATI DOCUMENTO
  =============================== */
- const modulo = " Checklist Ambulanza A-ALS";
+ const modulo = " Checklist Ambulanza A -BLS";
  const data_servizio = new Date().toISOString().slice(0,10);
  
  const payload = {
